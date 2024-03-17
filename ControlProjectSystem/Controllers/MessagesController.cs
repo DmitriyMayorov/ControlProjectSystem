@@ -1,4 +1,7 @@
-﻿using Interfaces.Services;
+﻿using BusinesLogic.Service;
+using Interfaces.DTO;
+using Interfaces.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -6,10 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace ControlProjectSystem.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors]
     [ApiController]
     public class MessagesController : ControllerBase
     {
-        // GET: api/<MessagesController>
         public readonly IMessageService _messageService;
 
         public MessagesController(IMessageService messageService)
@@ -18,34 +21,38 @@ namespace ControlProjectSystem.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<MessageDTO>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return await Task.Run(() => _messageService.GetMessages());
         }
 
-        // GET api/<MessagesController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<MessageDTO>> Get(int id)
         {
-            return "value";
+            return await Task.Run(() => _messageService.GetMessage(id));
         }
 
-        // POST api/<MessagesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<MessageDTO>> Post(MessageDTO value)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await Task.Run(() => _messageService.CreateMessage(new MessageDTO {TextMessage = value.TextMessage, DateMessage = value.DateMessage, IDTask = value.IDTask, IDWorker = value.IDWorker }));
+            return CreatedAtAction("Get", new { Id = value.Id }, value);
         }
 
-        // PUT api/<MessagesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult<MessageDTO>> Put(int id, MessageDTO value)
         {
+            await Task.Run(() => _messageService.UpdateMessage(value));
+            return CreatedAtAction("Get", new { Id = value.Id }, value);
         }
 
-        // DELETE api/<MessagesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async void Delete(int id)
         {
+            await Task.Run(() => _messageService.DeleteMessage(id));
         }
     }
 }

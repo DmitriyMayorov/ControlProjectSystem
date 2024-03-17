@@ -137,6 +137,8 @@ public partial class ControlProjectSystemContext : DbContext
             entity.Property(e => e.Position).HasColumnType("character varying");
         });
 
+        //Здесь будет DbInitializer
+
         OnModelCreatingPartial(modelBuilder);
     }
 

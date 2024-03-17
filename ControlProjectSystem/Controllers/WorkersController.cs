@@ -1,11 +1,13 @@
-﻿using Interfaces.Services;
+﻿using BusinesLogic.Service;
+using Interfaces.DTO;
+using Interfaces.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ControlProjectSystem.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors]
     [ApiController]
     public class WorkersController : ControllerBase
     {
@@ -15,38 +17,51 @@ namespace ControlProjectSystem.Controllers
         public WorkersController(IWorkerService workerService)
         {
             _workerService = workerService;
+            if (!_workerService.GetWorkers().Any())
+            {
+                _workerService.CreateWorker(new WorkerDTO()
+                {
+                    Person = "Test",
+                    PassportNum = 0,
+                    PassportSeries = 0,
+                    Position = "Tester"
+                });
+            }
         }
 
-        // GET: api/<WorkersController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public  async Task<ActionResult<IEnumerable<WorkerDTO>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return await Task.Run(() =>  _workerService.GetWorkers());
         }
 
-        // GET api/<WorkersController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<WorkerDTO>> Get(int id)
         {
-            return "value";
+            return await Task.Run(() => _workerService.GetWorker(id));
         }
 
-        // POST api/<WorkersController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<WorkerDTO>> Post(WorkerDTO value)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await Task.Run(() => _workerService.CreateWorker(new WorkerDTO { Person = value.Person, PassportNum = value.PassportNum, PassportSeries = value.PassportSeries, Position = value.Position }));
+            return CreatedAtAction("Get", new { Id = value.Id }, value);
         }
 
-        // PUT api/<WorkersController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult<WorkerDTO>> Put(int id, WorkerDTO value)
         {
+            await Task.Run(() => _workerService.UpdateWorker(value));
+            return CreatedAtAction("Get", new { Id = value.Id }, value);
         }
 
-        // DELETE api/<WorkersController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async void Delete(int id)
         {
+            await Task.Run(() => _workerService.DeleteWorker(id));
         }
     }
 }

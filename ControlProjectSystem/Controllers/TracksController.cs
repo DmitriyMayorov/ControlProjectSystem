@@ -1,4 +1,7 @@
-﻿using Interfaces.Services;
+﻿using BusinesLogic.Service;
+using Interfaces.DTO;
+using Interfaces.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -6,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ControlProjectSystem.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors]
     [ApiController]
     public class TracksController : ControllerBase
     {
@@ -16,36 +20,40 @@ namespace ControlProjectSystem.Controllers
             _trackService = trackService;
         }
 
-        // GET: api/<TracksController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<TrackDTO>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return await Task.Run(() => _trackService.GetTracks());
         }
 
-        // GET api/<TracksController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<TrackDTO>> Get(int id)
         {
-            return "value";
+            return await Task.Run(() => _trackService.GetTrack(id)); ;
         }
 
-        // POST api/<TracksController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<TrackDTO>> Post(TrackDTO value)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await Task.Run(() => _trackService.CreateTrack(new TrackDTO { CountHours = value.CountHours, DateTrack = value.DateTrack,
+                                                                            IDTask = value.IDTask, IDWorker = value.IDWorker, StatusTask = value.StatusTask}));
+            return CreatedAtAction("Get", new { Id = value.Id }, value);
         }
 
-        // PUT api/<TracksController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult<TrackDTO>> Put(int id, TrackDTO value)
         {
+            await Task.Run(() => _trackService.UpdateTrack(value));
+            return CreatedAtAction("Get", new { Id = value.Id }, value);
         }
 
-        // DELETE api/<TracksController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async void Delete(int id)
         {
+            await Task.Run(() => _trackService.DeleteTrack(id));
         }
     }
 }

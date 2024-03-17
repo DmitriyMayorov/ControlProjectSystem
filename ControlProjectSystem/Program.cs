@@ -11,6 +11,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ControlProjectSystemContext>(opt =>
 opt.UseInMemoryDatabase("ControlProjectSystem"));
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+    builder =>
+    {
+        builder.WithOrigins("http://localhost:3000")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+
+    });
+});
+
 builder.Services.AddTransient<IDbRepos, DbReposPgs>();
 builder.Services.AddTransient<IWorkerService, WorkerService>();
 builder.Services.AddTransient<IProjectService, ProjectService>();
@@ -38,5 +50,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors();
 
 app.Run();

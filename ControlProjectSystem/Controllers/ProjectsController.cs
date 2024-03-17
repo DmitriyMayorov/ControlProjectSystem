@@ -1,11 +1,13 @@
 ﻿using Interfaces.Services;
 using Interfaces.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 
 
 namespace ControlProjectSystem.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors]
     [ApiController]
     public class ProjectsController : ControllerBase
     {
@@ -24,21 +26,18 @@ namespace ControlProjectSystem.Controllers
             }
         }
 
-        // GET: api/<ProjectsController>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProjectDTO>>> Get()
         {
             return await Task.Run(() => _projectService.GetProjects());
         }
 
-        // GET api/<ProjectsController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProjectDTO>> Get(int id)
         {
             return await Task.Run(() => _projectService.GetProject(id));
         }
 
-        // POST api/<ProjectsController>
         [HttpPost]
         public async Task<ActionResult<ProjectDTO>> Post(ProjectDTO value)
         {
@@ -49,7 +48,6 @@ namespace ControlProjectSystem.Controllers
             return CreatedAtAction("Get", new { Id = value.Id }, value);
         }
 
-        // PUT api/<ProjectsController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult<ProjectDTO>> Put(ProjectDTO value)
         {
@@ -57,7 +55,6 @@ namespace ControlProjectSystem.Controllers
             return CreatedAtAction("Get", new { Id = value.Id }, value);
         }
 
-        // DELETE api/<ProjectsController>/5
         [HttpDelete("{id}")]
         public async void Delete(int id)
         {

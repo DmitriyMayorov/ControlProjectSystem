@@ -1,4 +1,7 @@
-﻿using Interfaces.Services;
+﻿using BusinesLogic.Service;
+using Interfaces.DTO;
+using Interfaces.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -6,46 +9,53 @@ using Microsoft.AspNetCore.Mvc;
 namespace ControlProjectSystem.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors]
     [ApiController]
     public class TasksController : ControllerBase
     {
-        public readonly IProjectService _taskService;
+        public readonly ITaskService _taskService;
 
-        public TasksController(IProjectService taskService)
+        public TasksController(ITaskService taskService)
         {
             _taskService = taskService;
         }
 
-        // GET: api/<TasksController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<TaskDTO>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return await Task.Run(() => _taskService.GetTasks());
         }
 
-        // GET api/<TasksController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<TaskDTO>> Get(int id)
         {
-            return "value";
+            return await Task.Run(() => _taskService.GetTask(id));
         }
 
-        // POST api/<TasksController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<TaskDTO>> Post(TaskDTO value)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await Task.Run(() => _taskService.CreateTask(new TaskDTO { Name = value.Name, Description = value.Description, IDWorkerAnalyst = value.IDWorkerAnalyst,
+                                                                        IDWorkerCoder = value.IDWorkerCoder, IDWorkerCreater = value.IDWorkerCreater, IDWorkerMentor = value.IDWorkerMentor,
+                                                                        IDWorkerTester = value.IDWorkerTester, IDProject = value.IDProject, Category = value.Category, State = value.State ,
+                                                                        Priority = value.Priority, Deadline = value.Deadline }));
+            return CreatedAtAction("Get", new { Id = value.Id }, value);
         }
 
-        // PUT api/<TasksController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult<TaskDTO>> Put(int id, TaskDTO value)
         {
+            await Task.Run(() => _taskService.UpdateTask(value));
+            return CreatedAtAction("Get", new { Id = value.Id }, value);
         }
 
-        // DELETE api/<TasksController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async void Delete(int id)
         {
+            await Task.Run(() => _taskService.DeleteTask(id));
         }
     }
 }

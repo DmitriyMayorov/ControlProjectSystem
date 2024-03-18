@@ -4,6 +4,7 @@ import ProjectCreate from "./ProjectCreate";
 import { Button, Table, Input } from "antd";
 import type { TableProps } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
+import { useLocation } from "react-router-dom";
 
 interface PropsType { }
 
@@ -28,6 +29,7 @@ const Project: React.FC<PropsType> = () => {
 
     useEffect(() => {
         const getProjects = async () => {
+
             const requestOptions: RequestInit = {
                 method: 'GET'
             };

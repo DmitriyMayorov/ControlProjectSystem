@@ -3,12 +3,14 @@ import ProjectObj from "../Enitities/ProjectObj";
 import { Button, Table, Input } from "antd";
 import type { TableProps } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 interface PropsType { }
 
-const ProjectList: React.FC<PropsType> = () => {
+const ProjectChoose: React.FC<PropsType> = () => {
 
     const [projects, setProjects] = useState<Array<ProjectObj>>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getProjects = async () => {
@@ -76,6 +78,10 @@ const ProjectList: React.FC<PropsType> = () => {
         },
     ]
 
+    const onRowClick = (row: ProjectObj) => {
+        navigate(`/projectsChoose/currentProject`, { state: { currentProject: row }});
+    };
+
     return (
         <React.Fragment>
             <h3>Проекты</h3>
@@ -85,10 +91,17 @@ const ProjectList: React.FC<PropsType> = () => {
                 columns={columns}
                 pagination={{pageSize: 15}}
                 scroll={{y : 1000}}
+                onRow={(record) => {
+                    return {
+                        onClick: () => {
+                            onRowClick(record)
+                        }
+                    };
+                }}
                 bordered
             />
         </React.Fragment>
     );
 };
 
-export default ProjectList;
+export default ProjectChoose;

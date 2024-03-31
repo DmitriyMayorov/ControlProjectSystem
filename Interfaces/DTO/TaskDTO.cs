@@ -30,7 +30,7 @@ namespace Interfaces.DTO
 
         public string Priority { get; set; } = null!;
 
-        public int? IDWorkerCreater { get; set; }
+/*        public int? IDWorkerCreater { get; set; }*/
 
         public DateOnly? Deadline { get; set; }
 

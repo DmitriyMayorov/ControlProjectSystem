@@ -72,6 +72,7 @@ namespace BusinesLogic.Service
             wk.PassportNum = worker.PassportNum;
             wk.PassportSeries = worker.PassportSeries;
             wk.Person = worker.Person;
+            wk.Position = worker.Position;
             db.Workers.Update(wk);
             SaveChanges();
         }

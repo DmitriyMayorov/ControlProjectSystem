@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Input, Modal, Button, Form, Select, } from "antd";
 import TaskObj from "../Enitities/TaskObj";
 import ProjectObj from "../Enitities/ProjectObj";
+import WorkerObj from "../Enitities/WorkerObj";
 
 interface PropsType {
     addTask: (worker: TaskObj) => void;
@@ -16,6 +17,11 @@ const TaskCreate : React.FC<PropsType> = ({
 }) => {
     const [form] = Form.useForm();
     const [projects, setProjects] = useState<Array<ProjectObj>>([]);
+    const [workers, setWorkers] = useState<Array<WorkerObj>>([]);
+    const [workersAnalyst, setWorkersAnalyst] = useState<Array<WorkerObj>>([]);
+    const [workersCoder, setWorkersCoder] = useState<Array<WorkerObj>>([]);
+    const [workerMentor, setWorkersMentor] = useState<Array<WorkerObj>>([]);
+    const [workersTester, setWorkersTester] = useState<Array<WorkerObj>>([]);
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [idWorkerCoder, setIdWorkerCoder] = useState<number>(0);
@@ -23,37 +29,60 @@ const TaskCreate : React.FC<PropsType> = ({
     const [idWorkerMentor, setIdWorkerMentor] = useState<number>(0);
     const [idWorkerTester, setIdWorkerTester] = useState<number>(0);
     const [idProject, setIdProject] = useState<number>(0);
-    const [category, setCategory] = useState<string>("");
+    const [category, setCategory] = useState<string>("Test");
     const [state, setState] = useState<string>("Analyst");
     const [priority, setPriority] = useState<string>("");
     const [deadline, setDeadline] = useState<string>("");
 
     useEffect(() => {
+        const getWorkers = () => {
+            const requestOptions : RequestInit = {
+                method: 'GET'
+            };
 
-        const getProjects = async () => {
+            fetch(`http://localhost:5177/api/Workers`, requestOptions)
+                .then(response => response.json())
+                .then(
+                    (data) => {
+                        // console.log(data);
+                        setWorkers(data);
+                        // console.log(workers);
+                    },
+                    (error) => console.log(error) 
+                );
+        };
+
+        const getProjects = () => {
 
             const requestOptions: RequestInit = {
                 method: 'GET'
             };
 
-            await fetch(`http://localhost:5177/api/Projects`, requestOptions)
+            fetch(`http://localhost:5177/api/Projects`, requestOptions)
                 .then(response => response.json())
                 .then(
                     (data) => {
-                        console.log("--------");
                         console.log(data);
                         setProjects(data);
+                        console.log(projects);
                     },
                     (error) => console.log(error)
                 );
         };
 
+        getWorkers();
         getProjects();
 
+        setWorkersAnalyst(workers.filter(({ position }) => position === "Analyst"));
+        setWorkersCoder(workers.filter(({ position }) => position === "Coder"));
+        setWorkersMentor(workers.filter(({ position }) => position === "Coder"));
+        setWorkersTester(workers.filter(({ position }) => position === "Tester"));
+
+        console.log(workers);
         return () => {
             form.resetFields();
         }
-    }, [form]);
+    }, []);
 
     const handleSubmit = (e: Event) => {
         const createTasks = async () => {
@@ -71,13 +100,15 @@ const TaskCreate : React.FC<PropsType> = ({
                 deadline
             }
 
+            console.log(task);
+
             const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(task)
             };
 
-            const response = await fetch(`http://localhost:5177/api/Tasks`, requestOptions);
+            const response = await fetch(`api/Tasks`, requestOptions);
             return await response.json()
                 .then((data) => {
                     console.log(data)
@@ -143,62 +174,94 @@ const TaskCreate : React.FC<PropsType> = ({
                 <Form.Item name="idWorkerAnalyst" label="Аналитик" hasFeedback rules={[
                     {
                         required: true,
-                        type: "string",
+                        type: "number",
                         message: "Выберите аналитика"
                     }
                 ]}>
-                    <Input
+                    <Select
+                        showSearch
                         key="idWorkerAnalyst"
-                        type="string"
-                        name="idWorkerAnalyst"
-                        placeholder=""
-                        value={idWorkerAnalyst}
-                        onChange={(e) => setIdWorkerAnalyst(Number(e.target.value))} />
+                        placeholder="Search to Select"
+                        optionFilterProp="children"
+                        onChange={(value) => setIdWorkerAnalyst(value)}
+                    >
+                        {workersAnalyst.map((object, id) => {
+                            return (
+                                <Select.Option value={object.id} key={id}>
+                                    {object.person}
+                                </Select.Option>
+                            );
+                        })}
+                    </Select>
                 </Form.Item>
                 <Form.Item name="idWorkerTester" label="Тестировщик" hasFeedback rules={[
                     {
                         required: true,
-                        type: "string",
+                        type: "number",
                         message: "Выберите тестировщика"
                     }
                 ]}>
-                    <Input
-                        key="Position"
-                        type="number"
-                        name="Position"
-                        placeholder=""
-                        value={idWorkerTester}
-                        onChange={(e) => setIdWorkerTester(Number(e.target.value))} />
+                    <Select
+                        showSearch
+                        key="idWorkerTester"
+                        placeholder="Search to Select"
+                        optionFilterProp="children"
+                        onChange={(value) => setIdWorkerTester(value)}
+                    >
+                        {workersTester.map((object, id) => {
+                            return (
+                                <Select.Option value={object.id} key={id}>
+                                    {object.person}
+                                </Select.Option>
+                            );
+                        })}
+                    </Select>
                 </Form.Item>
                 <Form.Item name="idWorkerMentor" label="Техлид" hasFeedback rules={[
                     {
                         required: true,
-                        type: "string",
+                        type: "number",
                         message: "Выберите техлида"
                     }
                 ]}>
-                    <Input
+                    <Select
+                        showSearch
                         key="idWorkerMentor"
-                        type="string"
-                        name="idWorkerMentor"
-                        placeholder=""
-                        value={idWorkerTester}
-                        onChange={(e) => setIdWorkerMentor(Number(e.target.value))} />
+                        placeholder="Search to Select"
+                        optionFilterProp="children"
+                        onChange={(value) => setIdWorkerMentor(value)}
+                    >
+                        {workerMentor.map((object, id) => {
+                            return (
+                                <Select.Option value={object.id} key={id}>
+                                    {object.person}
+                                </Select.Option>
+                            );
+                        })}
+                    </Select>
                 </Form.Item>
                 <Form.Item name="idWorkerCoder" label="Программист" hasFeedback rules={[
                     {
                         required: true,
-                        type: "string",
+                        type: "number",
                         message: "Выберите программиста"
                     }
                 ]}>
-                    <Input
+                    <Select
+                        showSearch
                         key="idWorkerCoder"
-                        type="string"
-                        name="idWorkerCoder"
-                        placeholder=""
-                        value={idWorkerTester}
-                        onChange={(e) => setIdWorkerCoder(Number(e.target.value))} />
+                        placeholder="Search to Select"
+                        optionFilterProp="children"
+                        onChange={(value) => setIdWorkerCoder(value)}
+                    >
+                        {workersCoder.map((object, id) => {
+                            return (
+                                <Select.Option value={object.id} key={id}>
+                                    {object.person}
+                                </Select.Option>
+                            );
+                        })}
+                    </Select>
                 </Form.Item>
                 <Form.Item name="idProject" label="Проект" hasFeedback rules={[
                     {
@@ -209,6 +272,7 @@ const TaskCreate : React.FC<PropsType> = ({
                 ]}>
                     <Select
                         showSearch
+                        key="idProject"
                         placeholder="Search to Select"
                         optionFilterProp="children"
                         onChange={(value) => setIdProject(value)}
@@ -229,7 +293,7 @@ const TaskCreate : React.FC<PropsType> = ({
                         message: "Выберите приоритет"
                     }
                 ]}>
-                    <Select defaultValue="low"
+                    <Select
                         onChange={(e) => setPriority(e)} 
                         options={[
                             { value: "low", label: "Низкий" },
@@ -238,7 +302,7 @@ const TaskCreate : React.FC<PropsType> = ({
                         ]}
                     />
                 </Form.Item>
-                <Form.Item name="idWorkerTester" label="Срок окончания" hasFeedback rules={[
+                <Form.Item name="deadline" label="Срок окончания" hasFeedback rules={[
                     {
                         required: true,
                         type: "date",
@@ -246,9 +310,9 @@ const TaskCreate : React.FC<PropsType> = ({
                     }
                 ]}>
                     <Input
-                        key="Position"
+                        key="deadline"
                         type="date"
-                        name="Position"
+                        name="deadline"
                         placeholder=""
                         value={idWorkerTester}
                         onChange={(e) => setDeadline(e.target.value)} />

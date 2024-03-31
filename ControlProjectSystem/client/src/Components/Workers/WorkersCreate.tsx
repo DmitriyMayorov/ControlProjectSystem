@@ -90,7 +90,7 @@ const WorkerCreate : React.FC<PropsType> = ({
                 body: JSON.stringify(worker)
             };
 
-            const response = await fetch(`http://localhost:5177/api/Workers/${id}`, requestOptions);
+            const response = await fetch(`api/Workers/${id}`, requestOptions);
             await response.json()
                 .then(
                     (data) => {

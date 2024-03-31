@@ -16,14 +16,6 @@ namespace ControlProjectSystem.Controllers
         public ProjectsController(IProjectService projectService)
         {
             _projectService = projectService;
-            if (!_projectService.GetProjects().Any())
-            {
-                _projectService.CreateProject(new ProjectDTO() 
-                { 
-                    Name = "FirstProject", 
-                    DeadLine = DateOnly.MaxValue
-                });
-            }
         }
 
         [HttpGet]

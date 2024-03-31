@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DomainModel;
 
-public partial class ControlProjectSystemContext : DbContext
+public partial class ControlProjectSystemContext : IdentityDbContext<User>
 {
     public ControlProjectSystemContext()
     {
@@ -25,9 +26,7 @@ public partial class ControlProjectSystemContext : DbContext
 
     public virtual DbSet<Worker> Workers { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ControlProjectSystem;Username=postgres;Password=P@ssw0rd");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ControlProjectSystem;Username=postgres;Password=P@ssw0rd");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -137,8 +136,16 @@ public partial class ControlProjectSystemContext : DbContext
             entity.Property(e => e.Position).HasColumnType("character varying");
         });
 
-        //Здесь будет DbInitializer
 
+        IList<Project> projectsData = new List<Project>
+        {
+            new Project() {Name = "FirstProject", DeadLine = DateOnly.MaxValue },
+            new Project() {Name = "SecondProject", DeadLine = DateOnly.MinValue},
+        };
+
+        modelBuilder.Entity<Project>().HasData(projectsData);
+
+        base.OnModelCreating(modelBuilder);
         OnModelCreatingPartial(modelBuilder);
     }
 

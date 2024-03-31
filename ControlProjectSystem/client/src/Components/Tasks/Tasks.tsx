@@ -37,11 +37,10 @@ const Task : React.FC<PropsType> = () => {
                 method: 'GET'
             };
 
-            await fetch(`http://localhost:5177/api/Tasks`, requestOptions)
+            await fetch(`api/Tasks`, requestOptions)
                 .then(response => response.json())
                 .then(
                     (data) => {
-                        console.log(data);
                         setTasks(data);
                     },
                     (error) => console.log(error)
@@ -52,6 +51,7 @@ const Task : React.FC<PropsType> = () => {
             else
                 throw "Error";
         };
+
         getTask();
     }, [createModalIsShow]);
 
@@ -60,7 +60,7 @@ const Task : React.FC<PropsType> = () => {
             method: 'DELETE'
         }
 
-        return await fetch(`http://localhost:5177/api/Tasks/${id}`, requestOptions)
+        return await fetch(`api/Tasks/${id}`, requestOptions)
             .then((response) => {
                 if (response.ok) {
                     removeTask(id);
@@ -73,7 +73,6 @@ const Task : React.FC<PropsType> = () => {
 
     const editTask = (obj : TaskObj) => {
         setEditingTask(obj);
-        console.log(obj)
         showCreateModel(true);
     };
 

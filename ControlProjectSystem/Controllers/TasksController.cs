@@ -39,7 +39,7 @@ namespace ControlProjectSystem.Controllers
                 return BadRequest(ModelState);
 
             await Task.Run(() => _taskService.CreateTask(new TaskDTO { Name = value.Name, Description = value.Description, IDWorkerAnalyst = value.IDWorkerAnalyst,
-                                                                        IDWorkerCoder = value.IDWorkerCoder, IDWorkerCreater = value.IDWorkerCreater, IDWorkerMentor = value.IDWorkerMentor,
+                                                                        IDWorkerCoder = value.IDWorkerCoder/*, IDWorkerCreater = value.IDWorkerCreater*/, IDWorkerMentor = value.IDWorkerMentor,
                                                                         IDWorkerTester = value.IDWorkerTester, IDProject = value.IDProject, Category = value.Category, State = value.State ,
                                                                         Priority = value.Priority, Deadline = value.Deadline }));
             return CreatedAtAction("Get", new { Id = value.Id }, value);

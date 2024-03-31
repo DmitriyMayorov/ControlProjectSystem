@@ -53,7 +53,7 @@ const ProjectCreate: React.FC<PropsType> = ({
                 body: JSON.stringify(project)
             };
 
-            const response = await fetch(`http://localhost:5177/api/Projects`, requestOptions);
+            const response = await fetch(`api/Projects`, requestOptions);
             return await response.json()
                 .then((data) => {
                     console.log(data)
@@ -80,7 +80,7 @@ const ProjectCreate: React.FC<PropsType> = ({
                 body: JSON.stringify(project)
             };
 
-            const response = await fetch(`http://localhost:5177/api/Projects/${id}`, requestOptions);
+            const response = await fetch(`api/Projects/${id}`, requestOptions);
             await response.json()
                 .then(
                     (data) => {

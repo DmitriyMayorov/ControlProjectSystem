@@ -4,7 +4,7 @@ import ProjectCreate from "./ProjectCreate";
 import { Button, Table, Input } from "antd";
 import type { TableProps } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 
 interface PropsType { }
 
@@ -34,7 +34,7 @@ const Project: React.FC<PropsType> = () => {
                 method: 'GET'
             };
 
-            await fetch(`http://localhost:5177/api/Projects`, requestOptions)
+            await fetch(`api/Projects`, requestOptions)
                 .then(response => response.json())
                 .then(
                     (data) => {
@@ -52,7 +52,7 @@ const Project: React.FC<PropsType> = () => {
             method: 'DELETE'
         }
 
-        return await fetch(`http://localhost:5177/api/Projects/${id}`, requestOptions)
+        return await fetch(`api/Projects/${id}`, requestOptions)
             .then((response) => {
                 if (response.ok) {
                     removeProject(id);
@@ -74,39 +74,6 @@ const Project: React.FC<PropsType> = () => {
             title: "Название",
             dataIndex: "name",
             key: "name",
-            filterDropdown: ({
-                setSelectedKeys,
-                selectedKeys,
-                confirm,
-                clearFilters,
-            }) => (
-                <React.Fragment>
-                    <Input 
-                        autoFocus
-                        placeholder="Введите название"
-                        value={selectedKeys[0]}
-                        onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                        onPressEnter={() => confirm()}
-                        onBlur={() => confirm()}
-                ></Input>
-                <Button onClick={() => confirm()} type="primary" key="serchButton">
-                    Поиск
-                </Button>
-                <Button 
-                    onClick={() => {
-                        clearFilters ? clearFilters() : setSelectedKeys([]);
-                        confirm();
-                    }}
-                    type="primary"
-                    danger
-                    key="dropFilter">
-                        Сброс фильтра
-                </Button>
-                </React.Fragment>
-            ),
-            filterIcon: () => <SearchOutlined />,
-            onFilter: (value, record) =>
-              record.name.toLowerCase().includes(value.toString().toLowerCase()),
         },
         {
             title: "Срок окончания проекта",

@@ -4,7 +4,7 @@ import { Button, Table, Input } from "antd";
 import type { TableProps } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import WorkerCreate from "./WorkersCreate";
-import { icons } from "antd/es/image/PreviewGroup";
+// import { icons } from "antd/es/image/PreviewGroup";
 
 interface PropsType {}
 
@@ -34,7 +34,7 @@ const Worker : React.FC<PropsType> = () => {
                 method: 'GET'
             };
 
-            await fetch(`http://localhost:5177/api/Workers`, requestOptions)
+            await fetch(`api/Workers`, requestOptions)
                 .then(response => response.json())
                 .then(
                     (data) => {
@@ -52,7 +52,7 @@ const Worker : React.FC<PropsType> = () => {
             method: 'DELETE'
         }
 
-        return await fetch(`http://localhost:5177/api/Workers/${id}`, requestOptions)
+        return await fetch(`api/Workers/${id}`, requestOptions)
             .then((response) => {
                 if (response.ok) {
                     removeWorker(id);

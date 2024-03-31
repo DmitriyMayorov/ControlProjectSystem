@@ -137,8 +137,15 @@ public partial class ControlProjectSystemContext : DbContext
             entity.Property(e => e.Position).HasColumnType("character varying");
         });
 
-        //Здесь будет DbInitializer
+/*        IList<Project> projectsData = new List<Project>()
+        {
+            new Project() {Name = "ThirdProject", DeadLine = DateOnly.MaxValue},
+            new Project() {Name = "ThoughtProject", DeadLine = DateOnly.MinValue},
+        };
 
+        modelBuilder.Entity<Project>().HasData(projectsData);*/
+
+        base.OnModelCreating(modelBuilder);
         OnModelCreatingPartial(modelBuilder);
     }
 

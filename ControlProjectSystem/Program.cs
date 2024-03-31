@@ -3,14 +3,13 @@ using DataAccess.RepositoryPostgreSQL;
 using DomainModel;
 using Interfaces.Repository;
 using Interfaces.Services;
+using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddDbContext<ControlProjectSystemContext>(opt =>
-opt.UseInMemoryDatabase("ControlProjectSystem"));
-
+builder.Services.AddDbContext<ControlProjectSystemContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("ControlProjectSystem")));
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -22,6 +21,8 @@ builder.Services.AddCors(options =>
 
     });
 });
+
+builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddTransient<IDbRepos, DbReposPgs>();
 builder.Services.AddTransient<IWorkerService, WorkerService>();

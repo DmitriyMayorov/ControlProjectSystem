@@ -37,7 +37,7 @@ const Task : React.FC<PropsType> = () => {
                 method: 'GET'
             };
 
-            await fetch(`http://localhost:5177/api/Tasks`, requestOptions)
+            await fetch(`api/Tasks`, requestOptions)
                 .then(response => response.json())
                 .then(
                     (data) => {

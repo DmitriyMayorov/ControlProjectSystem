@@ -18,7 +18,7 @@ const ProjectChoose: React.FC<PropsType> = () => {
                 method: 'GET'
             };
 
-            await fetch(`http://localhost:5177/api/Projects`, requestOptions)
+            await fetch(`api/Projects`, requestOptions)
                 .then(response => response.json())
                 .then(
                     (data) => {

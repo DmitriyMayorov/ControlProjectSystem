@@ -4,6 +4,6 @@ interface UserObj {
     workerId: number;
     roles: string;
     isAuthenticated: boolean;
-  }
+}
   
-  export default UserObj;
+export default UserObj;

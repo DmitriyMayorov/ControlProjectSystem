@@ -66,7 +66,6 @@ const Project: React.FC<PropsType> = () => {
 
     const editProject = (obj : ProjectObj) => {
         setEditingProject(obj);
-        // console.log(obj)
         showCreateModel(true);
     }
 
@@ -118,7 +117,7 @@ const Project: React.FC<PropsType> = () => {
                 key="ProjectTable"
                 dataSource={projects}
                 columns={columns}
-                pagination={{pageSize: 1}}
+                pagination={{pageSize: 10}}
                 scroll={{y : 1000}}
                 bordered
             />

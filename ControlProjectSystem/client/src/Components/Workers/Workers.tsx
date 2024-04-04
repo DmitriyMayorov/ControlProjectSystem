@@ -4,7 +4,6 @@ import { Button, Table, Input } from "antd";
 import type { TableProps } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import WorkerCreate from "./WorkersCreate";
-import { icons } from "antd/es/image/PreviewGroup";
 
 interface PropsType {}
 
@@ -73,40 +72,7 @@ const Worker : React.FC<PropsType> = () => {
         {
             title: "ФИО",
             dataIndex: "person",
-            key: "person",
-            filterDropdown: ({
-                setSelectedKeys,
-                selectedKeys,
-                confirm,
-                clearFilters,
-            }) => (
-                <React.Fragment>
-                    <Input
-                        autoFocus
-                        placeholder="Введите ФИО"
-                        value={selectedKeys[0]}
-                        onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                        onPressEnter={() => confirm()}
-                        onBlur={() => confirm()}>
-                    </Input>
-                    <Button onClick={() => confirm()} type="primary" key="serchButton">
-                        Поиск
-                    </Button>
-                    <Button 
-                        onClick={() => {
-                            clearFilters ? clearFilters() : setSelectedKeys([]);
-                            confirm();
-                        }}
-                        type="primary"
-                        danger
-                        key="dropFilter">
-                            Сброс фильтра
-                </Button>
-                </React.Fragment>
-            ),
-            filterIcon: () => <SearchOutlined />,
-            onFilter: (value, record) =>
-              record.person.toLowerCase().includes(value.toString().toLowerCase()),
+            key: "person"
         },
         {
             title: "Номер пасспорта",
@@ -122,39 +88,6 @@ const Worker : React.FC<PropsType> = () => {
             title: "Должность",
             dataIndex: "position",
             key: "position",
-            filterDropdown: ({
-                setSelectedKeys,
-                selectedKeys,
-                confirm,
-                clearFilters,
-            }) => (
-                <React.Fragment>
-                    <Input
-                        autoFocus
-                        placeholder="Введите должность"
-                        value={selectedKeys[0]}
-                        onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                        onPressEnter={() => confirm()}
-                        onBlur={() => confirm()}>
-                    </Input>
-                    <Button onClick={() => confirm()} type="primary" key="serchButton">
-                        Поиск
-                    </Button>
-                    <Button 
-                        onClick={() => {
-                            clearFilters ? clearFilters() : setSelectedKeys([]);
-                            confirm();
-                        }}
-                        type="primary"
-                        danger
-                        key="dropFilter">
-                            Сброс фильтра
-                </Button>
-                </React.Fragment>
-            ),
-            filterIcon: () => <SearchOutlined />,
-            onFilter: (value, record) =>
-              record.position.toLowerCase().includes(value.toString().toLowerCase()),
         },
         {
             key: "Delete",
@@ -194,7 +127,7 @@ const Worker : React.FC<PropsType> = () => {
                 key="WorkerTable"
                 dataSource={workers}
                 columns={columns}
-                pagination={{pageSize: 15}}
+                pagination={{pageSize: 10}}
                 scroll={{y: 1000}}
                 bordered
             />

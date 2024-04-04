@@ -35,36 +35,32 @@ const TaskCreate : React.FC<PropsType> = ({
     const [deadline, setDeadline] = useState<string>("");
 
     useEffect(() => {
-        const getWorkers = () => {
+        const getWorkers = async () => {
             const requestOptions : RequestInit = {
                 method: 'GET'
             };
 
-            fetch(`http://localhost:5177/api/Workers`, requestOptions)
+            await fetch(`api/Workers`, requestOptions)
                 .then(response => response.json())
                 .then(
                     (data) => {
-                        // console.log(data);
                         setWorkers(data);
-                        // console.log(workers);
                     },
                     (error) => console.log(error) 
                 );
         };
 
-        const getProjects = () => {
+        const getProjects = async () => {
 
             const requestOptions: RequestInit = {
                 method: 'GET'
             };
 
-            fetch(`http://localhost:5177/api/Projects`, requestOptions)
+            await fetch(`api/Projects`, requestOptions)
                 .then(response => response.json())
                 .then(
                     (data) => {
-                        console.log(data);
                         setProjects(data);
-                        console.log(projects);
                     },
                     (error) => console.log(error)
                 );
@@ -73,16 +69,15 @@ const TaskCreate : React.FC<PropsType> = ({
         getWorkers();
         getProjects();
 
-        setWorkersAnalyst(workers.filter(({ position }) => position === "Analyst"));
-        setWorkersCoder(workers.filter(({ position }) => position === "Coder"));
-        setWorkersMentor(workers.filter(({ position }) => position === "Coder"));
-        setWorkersTester(workers.filter(({ position }) => position === "Tester"));
+        setWorkersAnalyst(workers.filter((e) => e.position == "Analyst"));
+        setWorkersCoder(workers.filter((e) => e.position == "Coder"));
+        setWorkersMentor(workers.filter((e) => e.position == "Coder"));
+        setWorkersTester(workers.filter((e) => e.position == "Tester"));
 
-        console.log(workers);
         return () => {
             form.resetFields();
         }
-    }, []);
+    }, [createModalIsShow, form]);
 
     const handleSubmit = (e: Event) => {
         const createTasks = async () => {
@@ -119,6 +114,9 @@ const TaskCreate : React.FC<PropsType> = ({
                 },
                 (error) => console.log(error)
                 );
+                // .catch(
+                //     (e) => console.log(e)
+                // );
         };
         createTasks();
     };
@@ -130,17 +128,17 @@ const TaskCreate : React.FC<PropsType> = ({
             footer={[
                 <Button
                     key="submitButton"
-                    form="projectForm"
+                    form="taskForm"
                     type="primary"
                     htmlType="submit"
-                    onClick={() => showCreateModel(false)}>
+                    onClick={() => showCreateModel(true)}>
                     Save
                 </Button>,
                 <Button key="closeButton" onClick={() => showCreateModel(false)} danger>
                     Close
                 </Button>
             ]}>
-            <Form id="projectForm" onFinish={handleSubmit} form={form}>
+            <Form id="taskForm" onFinish={handleSubmit} form={form}>
                 <Form.Item name="name" label="Название задания" hasFeedback rules={[
                     {
                         required: true,
@@ -231,7 +229,7 @@ const TaskCreate : React.FC<PropsType> = ({
                         optionFilterProp="children"
                         onChange={(value) => setIdWorkerMentor(value)}
                     >
-                        {workerMentor.map((object, id) => {
+                        {workersCoder.map((object, id) => {
                             return (
                                 <Select.Option value={object.id} key={id}>
                                     {object.person}

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import ProjectObj from "../Enitities/ProjectObj";
 import { Button, Table, Input } from "antd";
 import type { TableProps } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
 import TaskObj from "../Enitities/TaskObj";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import TaskCreate from "./TaskCreate";
 
 interface PropsType { }
@@ -13,20 +11,10 @@ const Task : React.FC<PropsType> = () => {
 
     const [tasks, setTasks] = useState<Array<TaskObj>>([]);
     const [createModalIsShow, showCreateModel] = useState<boolean>(false);
-    const [editingTask, setEditingTask] = useState<TaskObj>();
+    const navigate = useNavigate();
     const location = useLocation();
 
     const removeTask = (Id: number | undefined) => setTasks(tasks.filter(({ id }) => id !== Id));
-
-    const updateTask = (task : TaskObj) => {
-        setTasks(
-            tasks.map((e) => {
-                if (e.id == task.id)
-                    return task;
-                return e;
-            })
-        )
-    };
 
     const addTask = (task : TaskObj) => setTasks([...tasks, task]);
 
@@ -41,15 +29,17 @@ const Task : React.FC<PropsType> = () => {
                 .then(response => response.json())
                 .then(
                     (data) => {
-                        setTasks(data);
+                        console.log(data);
+                        var taskTemp : Array<TaskObj> = data;
+                        console.log(taskTemp);
+                        if (location.state.currentProject !== undefined) {
+                            setTasks(taskTemp.filter(( task ) => task.idProject === location.state.currentProject.id));
+                        } else {
+                            throw "Exeption";
+                        }
                     },
                     (error) => console.log(error)
                 );
-            
-            if (location.state.currentProject !== undefined)
-                setTasks(tasks.filter(({ idProject }) => idProject === location.state.currentProject.id));
-            else
-                throw "Error";
         };
 
         getTask();
@@ -71,9 +61,9 @@ const Task : React.FC<PropsType> = () => {
             )
     };
 
-    const editTask = (obj : TaskObj) => {
-        setEditingTask(obj);
-        showCreateModel(true);
+    const onRowClick = (row: TaskObj) => {
+        console.log(row);
+        navigate(`/currentTask`, { state: { currentTask: row }});
     };
 
     const columns : TableProps<TaskObj>["columns"] = [
@@ -81,39 +71,6 @@ const Task : React.FC<PropsType> = () => {
             title: "Название задания",
             dataIndex: "name",
             key: "name",
-            filterDropdown: ({
-                setSelectedKeys,
-                selectedKeys,
-                confirm,
-                clearFilters,
-            }) => (
-                <React.Fragment>
-                    <Input
-                        autoFocus
-                        placeholder="Введите название задания"
-                        value={selectedKeys[0]}
-                        onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                        onPressEnter={() => confirm()}
-                        onBlur={() => confirm()}>
-                    </Input>
-                    <Button onClick={() => confirm()} type="primary" key="serchButton">
-                        Поиск
-                    </Button>
-                    <Button 
-                        onClick={() => {
-                            clearFilters ? clearFilters() : setSelectedKeys([]);
-                            confirm();
-                        }}
-                        type="primary"
-                        danger
-                        key="dropFilter">
-                            Сброс фильтра
-                </Button>
-                </React.Fragment>
-            ),
-            filterIcon: () => <SearchOutlined />,
-            onFilter: (value, record) =>
-              record.name.toLowerCase().includes(value.toString().toLowerCase()),
         },
         {
             key: "Delete",
@@ -123,16 +80,6 @@ const Task : React.FC<PropsType> = () => {
                         onClick={() => deleteTask(row.id)}
                         danger>
                             Удалить
-                </Button>
-            ),
-        },
-        {
-            key: "Edit",
-            render: (row : TaskObj) => (
-                <Button key="editButton"
-                        type="primary"
-                        onClick={() => editTask(row)}>
-                            Изменить
                 </Button>
             ),
         }
@@ -154,6 +101,13 @@ const Task : React.FC<PropsType> = () => {
                 pagination={{pageSize: 15}}
                 scroll={{y: 1000}}
                 bordered
+                onRow={(record) => {
+                    return {
+                        onClick: () => {
+                            onRowClick(record);
+                        }
+                    };
+                }}
             />
         </React.Fragment>
     )

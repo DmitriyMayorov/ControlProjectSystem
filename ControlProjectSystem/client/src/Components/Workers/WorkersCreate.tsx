@@ -61,7 +61,7 @@ const WorkerCreate : React.FC<PropsType> = ({
                 body: JSON.stringify(worker)
             };
 
-            const response = await fetch(`http://localhost:5177/api/Workers`, requestOptions);
+            const response = await fetch(`api/Workers`, requestOptions);
             return await response.json()
                 .then((data) => {
                     console.log(data)
@@ -121,7 +121,7 @@ const WorkerCreate : React.FC<PropsType> = ({
             footer={[
                 <Button
                     key="submitButton"
-                    form="projectForm"
+                    form="workersForm"
                     type="primary"
                     htmlType="submit"
                     onClick={() => showCreateModel(false)}>
@@ -131,7 +131,7 @@ const WorkerCreate : React.FC<PropsType> = ({
                     Close
                 </Button>
             ]}>
-            <Form id="projectForm" onFinish={handleSubmit} form={form}>
+            <Form id="workerForm" onFinish={handleSubmit} form={form}>
                 <Form.Item name="person" label="ФИО" hasFeedback rules={[
                     {
                         required: true,

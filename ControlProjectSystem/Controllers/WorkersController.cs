@@ -17,16 +17,6 @@ namespace ControlProjectSystem.Controllers
         public WorkersController(IWorkerService workerService)
         {
             _workerService = workerService;
-            if (!_workerService.GetWorkers().Any())
-            {
-                _workerService.CreateWorker(new WorkerDTO()
-                {
-                    Person = "Test",
-                    PassportNum = 0,
-                    PassportSeries = 0,
-                    Position = "Tester"
-                });
-            }
         }
 
         [HttpGet]

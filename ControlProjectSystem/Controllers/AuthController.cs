@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Interfaces.DTO;
 using BusinesLogic.Service;
 using Interfaces.Services;
-using ControlProjectSystem.Migrations;
 
 namespace ControlProjectSystem.Controllers
 {
@@ -18,12 +17,14 @@ namespace ControlProjectSystem.Controllers
         private IWorkerService _workerService;
         private SignInManager<User>? signInManager;
         private UserManager<User>? userManager;
+        private RoleManager<IdentityRole> roleManager;
 
         public AuthController(IWorkerService workerService, SignInManager<User> signInManager, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             _workerService = workerService;
             this.signInManager = signInManager;
             this.userManager = userManager;
+            this.roleManager = roleManager;
         }
         private Task<User> GetCurrentUserAsync() => userManager.GetUserAsync(HttpContext.User);
 
@@ -50,25 +51,33 @@ namespace ControlProjectSystem.Controllers
                 idWorker = reg.IdWorker
             };
 
-            var result = await userManager.CreateAsync(user, reg.Password);
-            if (result.Succeeded)
+            if (await roleManager.RoleExistsAsync(reg.Role))
             {
-                await signInManager.SignInAsync(user, false);
-                return Ok(new { message = "Добавлен новый пользователь: " + user.UserName });
+                var result = await userManager.CreateAsync(user, reg.Password);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, reg.Role);
+                    await signInManager.SignInAsync(user, false);
+                    return Ok(new { message = "Добавлен новый пользователь: " + user.UserName });
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    var errorMsg = new
+                    {
+                        message = "Пользователь не добавлен",
+                        error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
+                    };
+                    return Created("", errorMsg);
+                }
             }
             else
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-                var errorMsg = new
-                {
-                    message = "Пользователь не добавлен",
-                    error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
-                };
-/*                string errorMsg = "HUI";*/
-                return Created("", errorMsg);
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "Ошибка", error = "Роли не существует" });
             }
         }
 
@@ -91,7 +100,16 @@ namespace ControlProjectSystem.Controllers
             var result = await signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, false);
             if (result.Succeeded)
             {
-                return Ok(new { message = "Выполнен вход", userName = login.Email });
+                User? user = await userManager.GetUserAsync(HttpContext.User);
+                IEnumerable<string> roles = await userManager.GetRolesAsync(user);
+                UserDTO responseUser = new UserDTO()
+                {
+                    username = user.UserName,
+                    email = user.Email,
+                    workerId = user.idWorker,
+                    roles = roles.First()
+                };
+                return Ok(new { message = "Выполнен вход", userName = login.Email, responseUser });
             }
             else
             {

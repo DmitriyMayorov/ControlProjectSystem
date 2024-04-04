@@ -3,17 +3,20 @@ using System;
 using DomainModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace ControlProjectSystem.Migrations
+namespace DataAccess.Migrations
 {
     [DbContext(typeof(ControlProjectSystemContext))]
-    partial class ControlProjectSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20240331225943_Identity")]
+    partial class Identity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

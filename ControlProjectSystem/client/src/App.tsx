@@ -10,6 +10,7 @@ import Login from './Components/RegisterAndLogin/Login';
 import Layout from './Components/Layout/Layout';
 import { useEffect, useState } from 'react';
 import Register from './Components/RegisterAndLogin/Register';
+import TaskCurrent from './Components/Tasks/TaskCurrent';
 
 interface ResponseModel {
   message: string;
@@ -26,7 +27,7 @@ function App() {
         method: "GET",
       };
 
-      return await fetch("api/isauthenticated", requestOptions)
+      return await fetch("api/account/isauthenticated", requestOptions)
         .then((response) => {
           return response.json();
         })
@@ -43,14 +44,16 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Layout user={user}/>}/> 
-        <Route path='/login' element={<Login setUser={setUser}/>}/>
-        <Route path='/logoff' element={<LogOff setUser={setUser}/>}/>
-        <Route path='/register' element={<Register/>}/>
-        <Route path='/projects' element={<Project/>}/>
-        <Route path='/workers' element={<Worker/>}/>
-        <Route path='/projectsChoose' element={<ProjectChoose/>}/>
-        <Route path='/projectsChoose/currentProject' element={<Task/>}/>
+        <Route path='/' element={<Layout user={user}/>}>
+          <Route path='/login' element={<Login setUser={setUser}/>}/>
+          <Route path='/logout' element={<LogOff setUser={setUser}/>}/>
+          <Route path='/register' element={<Register/>}/>
+          <Route path='/projects' element={<Project/>}/>
+          <Route path='/workers' element={<Worker/>}/>
+          <Route path='/projectsChoose' element={<ProjectChoose/>}/>
+          <Route path='/currentProject' element={<Task/>}/>
+          <Route path='/currentTask' element={<TaskCurrent/>}/>
+        </Route>
       </Routes>
     </BrowserRouter>
   );

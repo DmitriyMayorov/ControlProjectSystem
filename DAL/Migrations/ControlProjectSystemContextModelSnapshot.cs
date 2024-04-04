@@ -3,20 +3,17 @@ using System;
 using DomainModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace ControlProjectSystem.Migrations
+namespace DataAccess.Migrations
 {
     [DbContext(typeof(ControlProjectSystemContext))]
-    [Migration("20240319160136_AddGetSetUser")]
-    partial class AddGetSetUser
+    partial class ControlProjectSystemContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

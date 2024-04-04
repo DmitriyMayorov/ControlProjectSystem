@@ -31,7 +31,7 @@ const AnalystRoleModel = [
     },
     {
         label: (
-        <NavLink tag={Link} to="/projectChoose">
+        <NavLink tag={Link} to="/projectsChoose">
             Выбор проекта
         </NavLink>
         ),
@@ -66,7 +66,7 @@ const CoderRoleModel = [
     },
     {
         label: (
-          <NavLink tag={Link} to="/projectChoose">
+          <NavLink tag={Link} to="/projectsChoose">
             Выбор проекта
           </NavLink>
         ),
@@ -85,7 +85,7 @@ const TesterRoleModel = [
     },
     {
         label: (
-          <NavLink tag={Link} to="/projectChoose">
+          <NavLink tag={Link} to="/projectsChoose">
             Выбор проекта
           </NavLink>
         ),
@@ -97,7 +97,7 @@ const TesterRoleModel = [
             База проектов
         </NavLink>
         ),
-        key: "4",
+        key: "3",
     },
 ];
 

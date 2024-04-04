@@ -30,8 +30,6 @@ namespace Interfaces.DTO
 
         public string Priority { get; set; } = null!;
 
-/*        public int? IDWorkerCreater { get; set; }*/
-
         public DateOnly? Deadline { get; set; }
 
         public WorkerDTO? WorkerAnalyst { get; set; }
@@ -42,7 +40,7 @@ namespace Interfaces.DTO
 
         public WorkerDTO? WorkerTester { get; set; }
 
-        public ProjectDTO Project { get; set; } = null!;
+        public ProjectDTO? Project { get; set; }
 
         public TaskDTO() { }
 
@@ -60,8 +58,7 @@ namespace Interfaces.DTO
             State = tk.State;
             Priority = tk.Priority;
             Deadline = tk.Deadline;
-
-            Project = new ProjectDTO(tk.IdprojectNavigation);
+/*            Project = new ProjectDTO(tk.IdprojectNavigation);*/
         }
     }
 }

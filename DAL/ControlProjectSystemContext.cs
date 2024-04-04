@@ -137,13 +137,13 @@ public partial class ControlProjectSystemContext : IdentityDbContext<User>
         });
 
 
-        IList<Project> projectsData = new List<Project>
+/*        IList<Project> projectsData = new List<Project>
         {
             new Project() {Name = "FirstProject", DeadLine = DateOnly.MaxValue },
             new Project() {Name = "SecondProject", DeadLine = DateOnly.MinValue},
         };
 
-        modelBuilder.Entity<Project>().HasData(projectsData);
+        modelBuilder.Entity<Project>().HasData(projectsData);*/
 
         base.OnModelCreating(modelBuilder);
         OnModelCreatingPartial(modelBuilder);

@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ControlProjectSystemContext>(options => 
-options.UseNpgsql(builder.Configuration.GetConnectionString("ControlProjectSystemConnect"), b => b.MigrationsAssembly("ControlProjectSystem")));
+options.UseNpgsql(builder.Configuration.GetConnectionString("ControlProjectSystemConnect"), b => b.MigrationsAssembly("DataAccess")));
 
 builder.Services.AddCors(options =>
 {
@@ -24,7 +24,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+//builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ControlProjectSystemContext>();
 

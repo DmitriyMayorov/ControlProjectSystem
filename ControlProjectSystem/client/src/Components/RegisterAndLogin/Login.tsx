@@ -44,7 +44,7 @@ const Login: React.FC<PropsType> = ({ setUser }) => {
               placement: "topRight",
               duration: 2,
             });
-
+            console.log(response.data.responseUser);
             setUser(response.data.responseUser);
             // Переход на главную страницу
             navigate("/");

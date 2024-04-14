@@ -17,7 +17,7 @@ const Login: React.FC<PropsType> = ({ setUser }) => {
   const [message, setMessage] = useState<Array<string>>([]);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: Event) => {
+  const handleSubmit = () => {
     setMessage([]);
     const model: LoginObj = {
       email,
@@ -91,11 +91,11 @@ const Login: React.FC<PropsType> = ({ setUser }) => {
             },
             () => ({
               validator(_, value) {
-                if (/^.*(?=.{6,})(?=.*[a-zA-Z])(?=.*[!#$%&? _"]).*$/.test(value))
+                if (/^.(?=.*[a-zA-Z])(?=.*[!#$%&? _"])(?=.{8,}).*$/.test(value))
                   return Promise.resolve();
                 return Promise.reject(
                   new Error(
-                    "Ваш пароль должен содержать символы верхнего и нижнего регистров, цифры и спецсимволы"
+                    "Ваш пароль должен содержать символы верхнего и нижнего регистров и спецсимволы. Количество симолов больше 8"
                   )
                 );
               },

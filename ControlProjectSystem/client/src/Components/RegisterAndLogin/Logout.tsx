@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
+import { notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import UserObj from "../Enitities/UserObj";
-import { notification } from "antd";
 
 interface PropsType {
   setUser: (value: UserObj | null) => void;
@@ -11,7 +11,7 @@ const LogOff: React.FC<PropsType> = ({ setUser }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const logOff = async () => {
+    const LogOFF = async () => {
 
       const requestOptions = {
         method: 'POST',
@@ -37,7 +37,7 @@ const LogOff: React.FC<PropsType> = ({ setUser }) => {
         }
     }
     
-    logOff();
+    LogOFF();
   }, [navigate, setUser]);
 
   return <></>;

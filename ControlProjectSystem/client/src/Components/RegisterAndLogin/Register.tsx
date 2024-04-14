@@ -101,7 +101,7 @@ const Register: React.FC<PropsType> = () => {
                 message: "Введите Email",
               },
               () => ({
-                validator(_, value) 
+                validator(ruleObject, value) 
                 {
                   if (Number(value) === parseInt(value))
                     return Promise.resolve();
@@ -145,14 +145,14 @@ const Register: React.FC<PropsType> = () => {
               message: "Введите пароль",
             },
             () => ({
-              validator(_, value) 
+              validator(ruleObject, value) 
               {
-                if (/^.*(?=.{6,})(?=.*[a-zA-Z])(?=.*[!#$%&? _"]).*$/.test(value))
+                if (/^.*(?=.*[a-zA-Z])(?=.*[!#$%&? _"])(?=.{8,}).*$/.test(value))
                   return Promise.resolve();
                 return Promise.reject(
                   new Error
                   (
-                    "Ваш пароль должен содержать символы верхнего и нижнего регистров, цифры и спецсимволы"
+                    "Ваш пароль должен содержать символы верхнего и нижнего регистров и спецсимволы. Количество симолов больше 8"
                   )
                 );
               },
@@ -178,7 +178,7 @@ const Register: React.FC<PropsType> = () => {
             },
             ({ getFieldValue }) => 
             ({
-              validator(_, value) 
+              validator(ruleObject, value) 
               {
                 if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();

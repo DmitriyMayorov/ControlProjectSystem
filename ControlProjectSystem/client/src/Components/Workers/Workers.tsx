@@ -1,8 +1,7 @@
 import React, {useState, useEffect, AriaAttributes} from "react";
 import WorkerObj from "../Enitities/WorkerObj";
-import { Button, Table, Input } from "antd";
+import { Button, Table } from "antd";
 import type { TableProps } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
 import WorkerCreate from "./WorkersCreate";
 
 interface PropsType {}
@@ -121,7 +120,7 @@ const Worker : React.FC<PropsType> = () => {
                 createModalIsShow={createModalIsShow}
                 showCreateModel={showCreateModel}
             />
-            <h3>Список работников</h3>
+            <br/>
             <Button onClick={(e) => showCreateModel(true)}>Добавить работника</Button>
             <Table
                 key="WorkerTable"

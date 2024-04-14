@@ -2,25 +2,25 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import { NavLink, DropdownMenu, DropdownToggle, UncontrolledDropdown, DropdownItem } from "reactstrap";
 import { Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.css";
 import UserObj from "../Enitities/UserObj";
 import { Layout as LayoutAntd, Menu } from "antd";
 import "./Layout.css";
+import "bootstrap/dist/css/bootstrap.css";
 
 const { Header, Content, Footer } = LayoutAntd;
 
-const defaultItems = [
-  {
-    label: (
-      <NavLink tag={Link} to="/">
-        Система управления проектами 
-      </NavLink>
-    ),
-    key: "1",
-  },
+const defaultRolesGuests = [
+    {
+      label: (
+        <NavLink tag={Link} to="/">
+          Система управления проектами 
+        </NavLink>
+      ),
+      key: "1",
+    },
 ];
 
-const AnalystRoleModel = [
+const AnalystRoles = [
     {
         label: (
         <NavLink tag={Link} to="/">
@@ -55,7 +55,7 @@ const AnalystRoleModel = [
     },
 ];
 
-const CoderRoleModel = [
+const CoderRoles = [
     {
         label: (
           <NavLink tag={Link} to="/">
@@ -74,7 +74,7 @@ const CoderRoleModel = [
     },
 ];
 
-const TesterRoleModel = [
+const TesterRoles = [
     {
         label: (
           <NavLink tag={Link} to="/">
@@ -102,72 +102,44 @@ const TesterRoleModel = [
 ];
 
 interface PropsType {
-    user: UserObj | null;
+    ChooseUser: UserObj | null;
 }
 
-const Layout: React.FC<PropsType> = ({ user }) => {
+const Layout: React.FC<PropsType> = ({ ChooseUser }) => {
   return (
-    <LayoutAntd className="layout">
-      <Header
-        style={{
-          display: "flex",
-          position: "sticky",
-          top: 0,
-          zIndex: 1,
-          width: "100%",
-        }}
-      >
+    <LayoutAntd className="informationAboutLogin">
+      <Header style={{ display: "flex" }} >
         <Menu
           theme="dark"
           mode="horizontal"
-          style={{ minWidth: "800px" }}
+          style={{ minWidth: "1000px" }}
           items={
-            user?.roles.includes("Analyst")
-              ? AnalystRoleModel
-              : user?.roles.includes("Coder")
-              ? CoderRoleModel
-              : user?.roles.includes("Tester")
-              ? TesterRoleModel :
-              defaultItems
-          }
-        ></Menu>
-        <div style={{ marginLeft: "auto" }}>
+            ChooseUser?.roles.includes("Analyst")
+              ? AnalystRoles
+              : ChooseUser?.roles.includes("Coder")
+              ? CoderRoles
+              : ChooseUser?.roles.includes("Tester")
+              ? TesterRoles :
+              defaultRolesGuests
+          }/>
           <UncontrolledDropdown>
-            <DropdownToggle caret color="dark" right>
-              Аккаунт
+            <DropdownToggle caret color="dark" right style={{minWidth: "130px"}}>
+              {ChooseUser ? ChooseUser.email : "Гость"}
             </DropdownToggle>
-            <DropdownMenu dark right>
-              <DropdownItem text>
-                {user ? user.email : "Не авторизован"}
-              </DropdownItem>
-              <DropdownItem
-                tag={Link}
-                to="/register"
-                disabled={user ? true : false}
-              >
+            <DropdownMenu>
+              <DropdownItem tag={Link} to="/register" disabled={ChooseUser ? true : false}>
                 Регистрация
               </DropdownItem>
-              <DropdownItem
-                tag={Link}
-                to="/login"
-                disabled={user ? true : false}
-              >
+              <DropdownItem tag={Link} to="/login" disabled={ChooseUser ? true : false} >
                 Вход
               </DropdownItem>
-              <DropdownItem
-                tag={Link}
-                to="/logout"
-                disabled={user ? false : true}
-              >
+              <DropdownItem tag={Link} to="/logout" disabled={ChooseUser ? false : true} >
                 Выход
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
-        </div>
       </Header>
-      <Content className="site-layout" style={{ minHeight: "100%" }}>
-        <Outlet />
-      </Content>
+      <Content className="site-layout" style={{ minHeight: "100%" }}> <Outlet /> </Content>
       <Footer style={{ textAlign: "center" }}>Систсема управления программными проектами (СУПП)</Footer>
     </LayoutAntd>
   );

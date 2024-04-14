@@ -105,7 +105,8 @@ const TaskCreate : React.FC<PropsType> = ({
 
             const response = await fetch(`api/Tasks`, requestOptions);
             return await response.json()
-                .then((data) => {
+                .then(
+                (data) => {
                     console.log(data)
                     if (response.ok) {
                         addTask(data);
@@ -114,9 +115,6 @@ const TaskCreate : React.FC<PropsType> = ({
                 },
                 (error) => console.log(error)
                 );
-                // .catch(
-                //     (e) => console.log(e)
-                // );
         };
         createTasks();
     };

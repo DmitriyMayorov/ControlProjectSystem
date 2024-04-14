@@ -5,13 +5,6 @@ import { Link } from "react-router-dom";
 import LoginObj from "../Enitities/LoginObj";
 import UserObj from "../Enitities/UserObj";
 import { notification } from "antd";
-import axios from "axios";
-
-
-interface ResponseModel {
-  message: string;
-  responseUser: UserObj;
-}
 
 interface PropsType {
   setUser: (value: UserObj) => void;
@@ -20,13 +13,11 @@ interface PropsType {
 const Login: React.FC<PropsType> = ({ setUser }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [rememberMe, setRememberme] = useState<boolean>(false);
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [message, setMessage] = useState<Array<string>>([]);
   const navigate = useNavigate();
 
-
-  // handle submit event for the form
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: Event) => {
     setMessage([]);
     const model: LoginObj = {
       email,
@@ -35,55 +26,53 @@ const Login: React.FC<PropsType> = ({ setUser }) => {
     };
 
     const login = async () => {
-        const response =  await axios.post<ResponseModel>("api/account/login", model);
-        if (response.status === 200)
-        {
-          setMessage(["Вход завершился удачно"]);
-            notification.success({
-              message: "Вход завершился удачно",
-              placement: "topRight",
-              duration: 2,
-            });
-            console.log(response.data.responseUser);
-            setUser(response.data.responseUser);
-            // Переход на главную страницу
-            navigate("/");
-        }
+
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(model)
+      };
+
+      const response = await fetch(`api/account/login`, requestOptions)
+
+        if (response.ok) {
+          const data = await response.json();
+          notification.success({
+            message: "Вход завершился удачно",
+            placement: "topRight",
+            duration: 2,
+          });
+
+          setUser(data.responseUser);
+          navigate("/");
+        } 
         else
         {
-          setMessage(["Вход завершился неудачно"]);
-            notification.error({
-              message: "Вход завершился неудачно",
-              placement: "topRight",
-              duration: 2,
-            });
+          notification.error({
+            message: "Вход завершился неудачно",
+            placement: "topRight",
+            duration: 2,
+          });
         }
     };
 
     login();
   };
 
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 14 },
-  };
-
   return (
-    <div className="containerbox">
-      <Form onFinish={handleSubmit} {...layout}>
-        <h3>Вход</h3>
+    <>
+      <Form onFinish={handleSubmit}>
+        <br/>
         <Form.Item
           name="email"
           label="Email"
           hasFeedback
+          labelCol= { { span: 5 } }
+          wrapperCol= { {span: 13} }
           rules={[
             {
               required: true,
               message: "Введите Email",
-            },
-            {
-              type: "email",
-              message: "Введите корректный Email",
             },
           ]}
         >
@@ -93,6 +82,8 @@ const Login: React.FC<PropsType> = ({ setUser }) => {
           name="password"
           label="Пароль"
           hasFeedback
+          labelCol= { { span: 5 } }
+          wrapperCol= { {span: 13} }
           rules={[
             {
               required: true,
@@ -100,15 +91,11 @@ const Login: React.FC<PropsType> = ({ setUser }) => {
             },
             () => ({
               validator(_, value) {
-                if (
-                  /^.*(?=.{6,})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%&? _"]).*$/.test(
-                    value
-                  )
-                )
+                if (/^.*(?=.{6,})(?=.*[a-zA-Z])(?=.*[!#$%&? _"]).*$/.test(value))
                   return Promise.resolve();
                 return Promise.reject(
                   new Error(
-                    "Пароль должен должен состоять минимум из 6 символов, содержать только латинские символы, содержать заглавные, строчные буквы, цифры и специальные символы"
+                    "Ваш пароль должен содержать символы верхнего и нижнего регистров, цифры и спецсимволы"
                   )
                 );
               },
@@ -123,23 +110,21 @@ const Login: React.FC<PropsType> = ({ setUser }) => {
         <Form.Item name="rememberMe" wrapperCol={{ offset: 5, span: 16 }}>
           <Checkbox
             value={rememberMe}
-            onChange={(e) => setRememberme(e.target.checked)}
-          >
-            Запомнить?
+            onChange={(e) => setRememberMe(e.target.checked)}>
+            Запомнить меня?
           </Checkbox>
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
+        <Form.Item wrapperCol={{ offset: 16 }}>
           {message && message.map((value, key) => <p key={key}>{value}</p>)}
-          <br />
+          <br/>
           <Button htmlType="submit" type="primary">
             Вход
           </Button>
-          <br />
-          <Link to="/register">На страницу регистрации</Link>
+          <br/>
+          <Link to="/register">Страница регистрации</Link>
         </Form.Item>
       </Form>
-      <br />
-    </div>
+    </>
   );
 };
 

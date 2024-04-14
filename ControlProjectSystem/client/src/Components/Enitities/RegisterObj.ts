@@ -1,8 +1,7 @@
 interface RegisterObj {
-    // id?: number;
     email: string;
     password: string;
-    passwordConfirm: string;
+    passwordChecked: string;
     workerId: number;
     role: string;
   }

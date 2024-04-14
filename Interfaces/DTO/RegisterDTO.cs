@@ -20,7 +20,7 @@ namespace Interfaces.DTO
         [Required]
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]
         [DataType(DataType.Password)]
-        public string PasswordConfirm { get; set; } = null!;
+        public string PasswordChecked { get; set; } = null!;
 
         [Range(0, int.MaxValue, ErrorMessage = "Пожалуйста введите корректный номер")]
         public int IdWorker { get; set; }

@@ -44,7 +44,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Layout user={user}/>}>
+        <Route path='/' element={<Layout ChooseUser={user}/>}>
           <Route path='/login' element={<Login setUser={setUser}/>}/>
           <Route path='/logout' element={<LogOff setUser={setUser}/>}/>
           <Route path='/register' element={<Register/>}/>

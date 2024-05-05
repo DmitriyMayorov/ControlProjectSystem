@@ -10,9 +10,9 @@ interface PropsType {
     showCreateModel: (value: boolean) => void;
 }
 
-const TaskCreate : React.FC<PropsType> = ({
+const TaskCreate: React.FC<PropsType> = ({
     addTask,
-    createModalIsShow, 
+    createModalIsShow,
     showCreateModel
 }) => {
     const [form] = Form.useForm();
@@ -36,7 +36,7 @@ const TaskCreate : React.FC<PropsType> = ({
 
     useEffect(() => {
         const getWorkers = async () => {
-            const requestOptions : RequestInit = {
+            const requestOptions: RequestInit = {
                 method: 'GET'
             };
 
@@ -46,7 +46,7 @@ const TaskCreate : React.FC<PropsType> = ({
                     (data) => {
                         setWorkers(data);
                     },
-                    (error) => console.log(error) 
+                    (error) => console.log(error)
                 );
         };
 
@@ -81,17 +81,17 @@ const TaskCreate : React.FC<PropsType> = ({
 
     const handleSubmit = (e: Event) => {
         const createTasks = async () => {
-            const task : TaskObj = {
+            const task: TaskObj = {
                 name,
                 description,
                 idWorkerCoder,
-                idWorkerAnalyst, 
-                idWorkerMentor, 
+                idWorkerAnalyst,
+                idWorkerMentor,
                 idWorkerTester,
                 idProject,
                 category,
                 state,
-                priority, 
+                priority,
                 deadline
             }
 
@@ -106,14 +106,14 @@ const TaskCreate : React.FC<PropsType> = ({
             const response = await fetch(`api/Tasks`, requestOptions);
             return await response.json()
                 .then(
-                (data) => {
-                    console.log(data)
-                    if (response.ok) {
-                        addTask(data);
-                        form.resetFields();
-                    }
-                },
-                (error) => console.log(error)
+                    (data) => {
+                        console.log(data)
+                        if (response.ok) {
+                            addTask(data);
+                            form.resetFields();
+                        }
+                    },
+                    (error) => console.log(error)
                 );
         };
         createTasks();
@@ -290,7 +290,7 @@ const TaskCreate : React.FC<PropsType> = ({
                     }
                 ]}>
                     <Select
-                        onChange={(e) => setPriority(e)} 
+                        onChange={(e) => setPriority(e)}
                         options={[
                             { value: "low", label: "Низкий" },
                             { value: "medium", label: "Средний" },

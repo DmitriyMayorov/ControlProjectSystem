@@ -1,12 +1,10 @@
-import React, {useState, useEffect, AriaAttributes} from "react";
+import React, {useState, useEffect} from "react";
 import WorkerObj from "../Enitities/WorkerObj";
 import { Button, Table } from "antd";
 import type { TableProps } from "antd";
 import WorkerCreate from "./WorkersCreate";
 
-interface PropsType {}
-
-const Worker : React.FC<PropsType> = () => {
+const Worker : React.FC = () => {
 
     const [workers, setWorkers] = useState<Array<WorkerObj>>([]);
     const [createModalIsShow, showCreateModel] = useState<boolean>(false);

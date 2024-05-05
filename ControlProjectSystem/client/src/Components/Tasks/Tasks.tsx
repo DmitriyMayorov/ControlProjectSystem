@@ -5,9 +5,7 @@ import TaskObj from "../Enitities/TaskObj";
 import { useLocation, useNavigate } from "react-router-dom";
 import TaskCreate from "./TaskCreate";
 
-interface PropsType { }
-
-const Task : React.FC<PropsType> = () => {
+const Task : React.FC = () => {
 
     const [tasks, setTasks] = useState<Array<TaskObj>>([]);
     const [createModalIsShow, showCreateModel] = useState<boolean>(false);

@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import ProjectObj from "../Enitities/ProjectObj";
-import { Button, Table, Input } from "antd";
+import { Table } from "antd";
 import type { TableProps } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
-interface PropsType { }
-
-const ProjectChoose: React.FC<PropsType> = () => {
+const ProjectChoose: React.FC = () => {
 
     const [projects, setProjects] = useState<Array<ProjectObj>>([]);
     const navigate = useNavigate();

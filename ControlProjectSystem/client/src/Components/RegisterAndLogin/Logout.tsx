@@ -16,6 +16,7 @@ const LogOff: React.FC<PropsType> = ({ setUser }) => {
       const requestOptions = {
         method: 'POST',
       };
+      
       const response = await fetch("api/account/logoff", requestOptions)
 
         if (response.status === 200) {

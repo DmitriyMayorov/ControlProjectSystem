@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 import ProjectObj from "../Enitities/ProjectObj";
 import ProjectCreate from "./ProjectCreate";
-import { Button, Table, Input } from "antd";
+import { Button, Table } from "antd";
 import type { TableProps } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
-import { useLocation } from "react-router-dom";
 
-interface PropsType { }
-
-const Project: React.FC<PropsType> = () => {
+const Project: React.FC = () => {
 
     const [projects, setProjects] = useState<Array<ProjectObj>>([]);
     const [createModalIsShow, showCreateModel] = useState<boolean>(false);

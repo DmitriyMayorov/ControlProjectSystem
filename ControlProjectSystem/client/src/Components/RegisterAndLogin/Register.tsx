@@ -47,7 +47,7 @@ const Register: React.FC<PropsType> = () => {
         if (data.error !== undefined) {
           console.log(data.error);
           setError(
-            ["Регистрация завершилась неудачно "].concat(data.error)
+            ["Регистрация завершилась неудачно " + data.error]
           );
         } 
         else 
@@ -147,7 +147,7 @@ const Register: React.FC<PropsType> = () => {
             () => ({
               validator(ruleObject, value) 
               {
-                if (/^.*(?=.*[a-zA-Z])(?=.*[!#$%&? _"])(?=.{8,}).*$/.test(value))
+                if (/^.*(?=.*[a-zA-Z])(?=.*[!#@$%&? _"])(?=.{8,}).*$/.test(value))
                   return Promise.resolve();
                 return Promise.reject(
                   new Error

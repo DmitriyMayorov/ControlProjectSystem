@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ProjectObj from "../Enitities/ProjectObj";
 import { Input, Modal, Button, Form } from "antd";
 
-interface PropsType {
+interface ProjectCreateProps {
     editingProject: ProjectObj | undefined;
     addProject: (project: ProjectObj) => void;
     updateProject: (project: ProjectObj) => void;
@@ -10,7 +10,7 @@ interface PropsType {
     showCreateModel: (value: boolean) => void;
 }
 
-const ProjectCreate: React.FC<PropsType> = ({
+const ProjectCreate: React.FC<ProjectCreateProps> = ({
     editingProject,
     addProject,
     updateProject,

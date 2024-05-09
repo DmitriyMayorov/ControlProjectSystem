@@ -4,9 +4,7 @@ import { Link } from "react-router-dom";
 import RegisterObj from "../Enitities/RegisterObj";
 import { notification } from "antd";
 
-interface PropsType {}
-
-const Register: React.FC<PropsType> = () => {
+const Register: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordChecked, setCheckedPassword] = useState<string>("");

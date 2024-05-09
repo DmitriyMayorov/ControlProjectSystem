@@ -3,11 +3,11 @@ import { notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import UserObj from "../Enitities/UserObj";
 
-interface PropsType {
+interface LogoutProps {
   setUser: (value: UserObj | null) => void;
 }
 
-const LogOff: React.FC<PropsType> = ({ setUser }) => {
+const LogOff: React.FC<LogoutProps> = ({ setUser }) => {
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -6,11 +6,11 @@ import LoginObj from "../Enitities/LoginObj";
 import UserObj from "../Enitities/UserObj";
 import { notification } from "antd";
 
-interface PropsType {
+interface LoginProps {
   setUser: (value: UserObj) => void;
 }
 
-const Login: React.FC<PropsType> = ({ setUser }) => {
+const Login: React.FC<LoginProps> = ({ setUser }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);

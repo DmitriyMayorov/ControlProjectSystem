@@ -4,13 +4,13 @@ import TaskObj from "../Enitities/TaskObj";
 import ProjectObj from "../Enitities/ProjectObj";
 import WorkerObj from "../Enitities/WorkerObj";
 
-interface PropsType {
+interface TaskCreateProps {
     addTask: (worker: TaskObj) => void;
     createModalIsShow: boolean;
     showCreateModel: (value: boolean) => void;
 }
 
-const TaskCreate: React.FC<PropsType> = ({
+const TaskCreate: React.FC<TaskCreateProps> = ({
     addTask,
     createModalIsShow,
     showCreateModel

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Column } from '@ant-design/charts';
 import TrackObj from '../Enitities/TrackObj';
 
-interface PropsType {
+interface DemoColumnProps {
   idtask : number;
   refreshFlag : boolean;
 }
@@ -12,7 +12,7 @@ interface DataItem {
   countH: number;
 }
 
-const DemoColumn: React.FC<PropsType> = ({idtask, refreshFlag}) => {
+const DemoColumn: React.FC<DemoColumnProps> = ({idtask, refreshFlag}) => {
 
   const [tracks, setTracks] = useState<Array<TrackObj>>([]);
 

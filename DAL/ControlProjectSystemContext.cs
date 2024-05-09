@@ -32,20 +32,20 @@ public partial class ControlProjectSystemContext : IdentityDbContext<User>
     {
         modelBuilder.Entity<Message>(entity =>
         {
-            entity.HasKey(e => e.Idtask).HasName("Message_pkey");
+            entity.HasKey(e => e.Id).HasName("Message_pkey");
 
             entity.ToTable("Message");
 
-            entity.Property(e => e.Idtask)
-                .ValueGeneratedNever()
-                .HasColumnName("IDTask");
+            entity.Property(e => e.Idtask).HasColumnName("IDTask");
+
             entity.Property(e => e.Id)
                 .ValueGeneratedOnAdd()
                 .UseIdentityAlwaysColumn();
+
             entity.Property(e => e.Idworker).HasColumnName("IDWorker");
 
-            entity.HasOne(d => d.IdtaskNavigation).WithOne(p => p.Message)
-                .HasForeignKey<Message>(d => d.Idtask)
+            entity.HasOne(d => d.IdtaskNavigation).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.Idtask)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Task");
 

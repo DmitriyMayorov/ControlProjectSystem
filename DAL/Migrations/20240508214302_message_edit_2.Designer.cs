@@ -3,6 +3,7 @@ using System;
 using DomainModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ControlProjectSystemContext))]
-    partial class ControlProjectSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20240508214302_message_edit_2")]
+    partial class message_edit_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,8 +37,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("date");
 
                     b.Property<int>("Idtask")
-                        .HasColumnType("integer")
-                        .HasColumnName("IDTask");
+                        .HasColumnType("integer");
 
                     b.Property<int>("Idworker")
                         .HasColumnType("integer")
@@ -48,7 +50,8 @@ namespace DataAccess.Migrations
                     b.HasKey("Id")
                         .HasName("Message_pkey");
 
-                    b.HasIndex("Idtask");
+                    b.HasIndex("Idtask")
+                        .IsUnique();
 
                     b.HasIndex("Idworker");
 
@@ -412,8 +415,8 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DomainModel.Message", b =>
                 {
                     b.HasOne("DomainModel.Task", "IdtaskNavigation")
-                        .WithMany("Messages")
-                        .HasForeignKey("Idtask")
+                        .WithOne("Message")
+                        .HasForeignKey("DomainModel.Message", "Idtask")
                         .IsRequired()
                         .HasConstraintName("FK_Task");
 
@@ -545,7 +548,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DomainModel.Task", b =>
                 {
-                    b.Navigation("Messages");
+                    b.Navigation("Message");
 
                     b.Navigation("Tracks");
                 });

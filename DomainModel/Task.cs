@@ -40,7 +40,7 @@ public partial class Task
 
     public virtual Worker? IdworkerTesterNavigation { get; set; }
 
-    public virtual Message? Message { get; set; }
+    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 
     public virtual ICollection<Track> Tracks { get; set; } = new List<Track>();
 }

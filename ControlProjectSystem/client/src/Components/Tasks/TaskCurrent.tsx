@@ -1,18 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import TaskObj from "../Enitities/TaskObj";
-import { Button, Col, Input, List, Row, Select } from 'antd';
-import TextArea from "antd/es/input/TextArea";
+import { Button, Col, Input, List, Row, Select, Skeleton } from 'antd';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import DemoColumn from "./Plot";
 import WorkerObj from "../Enitities/WorkerObj";
+import MessageObj from "../Enitities/MessageObj";
+import Track from "../Track/Track";
+import InfiniteScroll from 'react-infinite-scroll-component';
+
+const { TextArea } = Input;
 
 const TaskCurrent: React.FC = () => {
 
-  const localtion = useLocation();
+  const location = useLocation();
   const [currentTask, setCurrentTask] = useState<TaskObj>();
-  const [messages, setMessages] = useState<Array<string>>([]);
+  const [messages, setMessages] = useState<Array<MessageObj>>([]);
   const [workers, setWorkers] = useState<Array<WorkerObj>>([]);
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -25,42 +29,77 @@ const TaskCurrent: React.FC = () => {
   const [state, setState] = useState<string>("");
   const [priority, setPriority] = useState<string>("");
   const [deadline, setDeadline] = useState<string>("");
+  const [createModalIsShow, showCreateModel] = useState<boolean>(false)
+  const [refreshFlag, setRefreshFlag] = useState<boolean>(true);
+  const [textMessage, setTextMessage] = useState<string>("");
+  const dateMessage = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
-    // if (localtion.state.currentTask == undefined)
-    //   console.log("ERROR! Task is not load!");
-    console.log(localtion.state.currentTask);
-    setCurrentTask(localtion.state.currentTask);
-    setIdWorkerAnalyst(localtion.state.currentTask.idWorkerAnalyst);
-    setIdWorkerCoder(localtion.state.currentTask.idWorkerCoder);
-    setIdWorkerMentor(localtion.state.currentTask.idWorkerMentor);
-    setIdWorkerTester(localtion.state.currentTask.idWorkerTester);
-    setName(localtion.state.currentTask.name);
-    setDescription(localtion.state.currentTask.description);
-    setIdProject(localtion.state.currentTask.idProject);
-    setCategory(localtion.state.currentTask.category);
-    setState(localtion.state.currentTask.state);
-    setPriority(localtion.state.currentTask.priority);
-    setDeadline(localtion.state.currentTask.deadline);
+    refresh(currentTask?.id);
+  }, [idWorkerCoder, idWorkerAnalyst, idWorkerMentor, idWorkerTester, state]);
 
-    const getWorkers = async () => {
-      const requestOptions: RequestInit = {
-        method: 'GET'
-      };
-
-      await fetch(`api/Workers`, requestOptions)
-        .then(response => response.json())
-        .then(
-          (data) => {
-            console.log(data);
-            setWorkers(data);
-          },
-          (error) => console.log(error)
-        );
-    };
+  useEffect(() => {
+    console.log(location.state.currentTask.state);
+    setCurrentTask(location.state.currentTask);
+    setIdWorkerAnalyst(location.state.currentTask.idWorkerAnalyst);
+    setIdWorkerCoder(location.state.currentTask.idWorkerCoder);
+    setIdWorkerMentor(location.state.currentTask.idWorkerMentor);
+    setIdWorkerTester(location.state.currentTask.idWorkerTester);
+    setName(location.state.currentTask.name);
+    setDescription(location.state.currentTask.description);
+    setIdProject(location.state.currentTask.idProject);
+    setCategory(location.state.currentTask.category);
+    setState(location.state.currentTask.state);
+    setPriority(location.state.currentTask.priority);
+    setDeadline(location.state.currentTask.deadline);
 
     getWorkers();
+    getMessages();
   }, []);
+
+  const CreateModelIsShowFunction = (value: boolean) => {
+    if (value) {
+      showCreateModel(value);
+    }
+    else {
+      setRefreshFlag(!refreshFlag);
+      showCreateModel(value);
+    }
+  }
+
+  const getWorkers = async () => {
+    const requestOptions: RequestInit = {
+      method: 'GET'
+    };
+
+    await fetch(`api/Workers`, requestOptions)
+      .then(response => response.json())
+      .then(
+        (data) => {
+          console.log(data);
+          setWorkers(data);
+        },
+        (error) => console.log(error)
+      );
+  };
+
+  const getMessages = async () => {
+    const requestOptions: RequestInit = {
+      method: 'GET'
+    };
+
+    await fetch(`api/Messages`, requestOptions)
+      .then(response => response.json())
+      .then(
+        (data) => {
+          console.log(data);
+          const tempArray = data as Array<MessageObj>;
+          const temp: Array<MessageObj> = tempArray.filter(message => message.idTask === location.state.currentTask.id);
+          setMessages(temp);
+        },
+        (error) => console.log(error)
+      );
+  }
 
   const editCurrentTask = async (task: TaskObj | undefined) => {
     const requestOptions = {
@@ -82,7 +121,7 @@ const TaskCurrent: React.FC = () => {
       );
   }
 
-  const refresh = (id: number | undefined) => {
+  const refresh = async (id: number | undefined) => {
     const task: TaskObj = {
       id,
       name,
@@ -100,8 +139,65 @@ const TaskCurrent: React.FC = () => {
     editCurrentTask(task);
   }
 
+  const addListMessage = async (message: MessageObj) => setMessages([...messages, message]);
+
+  const addMessage = async () => {
+
+    const idTask: number = Number(currentTask?.id);
+    const idworker: number = currentTask?.state === "Analyst" ? Number(currentTask?.idWorkerAnalyst) :
+      currentTask?.state === "InProgress" ? Number(currentTask?.idWorkerCoder) :
+        currentTask?.state === "Review" ? Number(currentTask?.idWorkerMentor) :
+          currentTask?.state === "Stage" ? Number(currentTask?.idWorkerCoder) :
+            currentTask?.state === "Test" ? Number(currentTask?.idWorkerTester) :
+              currentTask?.state === "Ready" ? Number(currentTask?.idWorkerAnalyst) :
+                Number(currentTask?.idWorkerAnalyst);
+
+    const message: MessageObj = {
+      textMessage,
+      dateMessage,
+      idTask,
+      idworker
+    }
+
+    console.log(message);
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(message)
+    };
+
+    const response = await fetch(`api/Messages`, requestOptions);
+    return await response.json()
+      .then((data) => {
+        if (response.ok) {
+          console.log("ADD NEW MESSAGE");
+          addListMessage(data);
+          console.log(data);
+        }
+      },
+        (error) => console.log(error)
+      );
+  }
+
   return (
     <>
+      <Track
+        createModalIsShow={createModalIsShow}
+        showCreateModel={showCreateModel}
+        idTask={location.state.currentTask.id}
+        idWorker={
+          currentTask?.state === "Analyst" ? currentTask?.idWorkerAnalyst :
+            currentTask?.state === "InProgress" ? currentTask?.idWorkerCoder :
+              currentTask?.state === "Review" ? currentTask?.idWorkerMentor :
+                currentTask?.state === "Stage" ? currentTask?.idWorkerCoder :
+                  currentTask?.state === "Test" ? currentTask?.idWorkerTester :
+                    currentTask?.state === "Ready" ? currentTask?.idWorkerAnalyst :
+                      currentTask?.idWorkerAnalyst
+        }
+        statusTask={currentTask?.state}
+        CreateModelIsShowFunction={CreateModelIsShowFunction}
+      />
       <Row>
         <Col flex="auto" style={{ margin: 20 }}>
           <Row>
@@ -113,7 +209,6 @@ const TaskCurrent: React.FC = () => {
             }}
               onClick={() => {
                 setState("Analyst");
-                refresh(currentTask?.id)
               }}>
               Аналитика
             </Button>
@@ -125,7 +220,6 @@ const TaskCurrent: React.FC = () => {
             }}
               onClick={() => {
                 setState("InProgress");
-                refresh(currentTask?.id)
               }}>
               В работу
             </Button>
@@ -137,7 +231,6 @@ const TaskCurrent: React.FC = () => {
             }}
               onClick={() => {
                 setState("Review");
-                refresh(currentTask?.id)
               }}>
               На ревью
             </Button>
@@ -149,7 +242,6 @@ const TaskCurrent: React.FC = () => {
             }}
               onClick={() => {
                 setState("Stage");
-                refresh(currentTask?.id)
               }}>
               Проверка на stage
             </Button>
@@ -161,7 +253,6 @@ const TaskCurrent: React.FC = () => {
             }}
               onClick={() => {
                 setState("Test");
-                refresh(currentTask?.id)
               }}>
               На тестирование
             </Button>
@@ -173,11 +264,11 @@ const TaskCurrent: React.FC = () => {
             }}
               onClick={() => {
                 setState("Ready");
-                refresh(currentTask?.id)
               }}>
               Готово
             </Button>
-            <Button style={{ minWidth: 150, marginRight: 2 }} danger>
+            <Button style={{ minWidth: 150, marginRight: 2 }}
+              onClick={() => CreateModelIsShowFunction(true)} danger>
               Добавить время
             </Button>
           </Row>
@@ -185,14 +276,14 @@ const TaskCurrent: React.FC = () => {
             <TextArea
               style={{ fontSize: 18 }}
               autoSize={{ maxRows: 1 }}
-              value={currentTask?.name} 
-              onChange={(e) => setName(e.target.name)}/>
+              value={name}
+              onChange={(e) => setName(e.target.value)} />
           </Row>
           <TextArea
             style={{ marginTop: 10 }}
             autoSize={{ minRows: 8 }}
-            value={currentTask?.description}
-            onChange={(e) => setDescription(e.target.name)} />
+            value={description}
+            onChange={(e) => setDescription(e.target.value)} />
           <Button style={{
             minWidth: 150,
             marginRight: 2,
@@ -203,19 +294,26 @@ const TaskCurrent: React.FC = () => {
             Сохранить описание
           </Button>
           <h3>Сообщения</h3>
-          <List
-            itemLayout="horizontal"
-            dataSource={messages}
-            renderItem={(item, index) => (
-              <List.Item>
-                <List.Item.Meta
-                  description={item}
-                />
-              </List.Item>
-            )}
-          />
-          <Input />
-          <Button>
+          <InfiniteScroll
+            dataLength={messages.length}
+            hasMore={messages.length < 1}
+            loader={<Skeleton paragraph={{ rows: 1 }} active />}
+            next={getMessages}>
+            <List
+              style={{ minHeight: 230, maxHeight: 230 }}
+              itemLayout="horizontal"
+              dataSource={messages}
+              renderItem={(item, index) => (
+                <List.Item>
+                  <List.Item.Meta
+                    description={item.textMessage}
+                  />
+                </List.Item>
+              )}
+            />
+          </InfiniteScroll>
+          <Input id="input" value={textMessage} onChange={(e) => setTextMessage(e.target.value)} />
+          <Button onClick={() => { addMessage(); setTextMessage(""); }}>
             Отправить
           </Button>
         </Col>
@@ -229,8 +327,7 @@ const TaskCurrent: React.FC = () => {
             placeholder="Search to Select"
             optionFilterProp="children"
             onChange={(value) => {
-              setIdWorkerCoder(value);
-              refresh(currentTask?.id);
+              setIdWorkerCoder(() => value);
             }}
           >
             {workers.map((object, id) => {
@@ -251,7 +348,6 @@ const TaskCurrent: React.FC = () => {
             value={idWorkerAnalyst}
             onChange={(value) => {
               setIdWorkerAnalyst(value);
-              refresh(currentTask?.id);
             }}
           >
             {workers.map((object, id) => {
@@ -272,7 +368,6 @@ const TaskCurrent: React.FC = () => {
             optionFilterProp="children"
             onChange={(value) => {
               setIdWorkerTester(value);
-              refresh(currentTask?.id);
             }}
           >
             {workers.map((object, id) => {
@@ -293,7 +388,6 @@ const TaskCurrent: React.FC = () => {
             optionFilterProp="children"
             onChange={(value) => {
               setIdWorkerMentor(value);
-              refresh(currentTask?.id);
             }}
           >
             {workers.map((object, id) => {
@@ -304,12 +398,12 @@ const TaskCurrent: React.FC = () => {
               );
             })}
           </Select>
-          <DemoColumn />
+          <DemoColumn idtask={Number(location.state.currentTask.id)} refreshFlag={refreshFlag} />
         </Col>
       </Row>
     </>
   );
 };
 
-ReactDOM.render(<DemoColumn />, document.getElementById('root'));
+ReactDOM.render(<DemoColumn idtask={0} refreshFlag={true} />, document.getElementById('root'));
 export default TaskCurrent;

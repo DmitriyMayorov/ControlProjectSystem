@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Input, Modal, Button, Form, } from "antd";
 import WorkerObj from "../Enitities/WorkerObj";
 
-interface PropsType {
+interface WorkerCreateProps {
     editingWorker: WorkerObj | undefined;
     addWorker: (worker: WorkerObj) => void;
     updateWorker: (worker : WorkerObj) => void;
@@ -10,7 +10,7 @@ interface PropsType {
     showCreateModel: (value: boolean) => void;
 }
 
-const WorkerCreate : React.FC<PropsType> = ({
+const WorkerCreate : React.FC<WorkerCreateProps> = ({
     editingWorker,
     addWorker,
     updateWorker,

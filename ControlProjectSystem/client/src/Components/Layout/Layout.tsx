@@ -102,11 +102,11 @@ const TesterRoles = [
     },
 ];
 
-interface PropsType {
+interface LayoutProps {
     ChooseUser: UserObj | null;
 }
 
-const Layout: React.FC<PropsType> = ({ ChooseUser }) => {
+const Layout: React.FC<LayoutProps> = ({ ChooseUser }) => {
   return (
     <LayoutAntd className="informationAboutLogin">
       <Header style={{ display: "flex" }} >

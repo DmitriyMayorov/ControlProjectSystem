@@ -3,12 +3,13 @@ import { Input, Button, Form, Radio, Select } from "antd";
 import { Link } from "react-router-dom";
 import RegisterObj from "../Enitities/RegisterObj";
 import { notification } from "antd";
+import axios from "axios";
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordChecked, setCheckedPassword] = useState<string>("");
-  const [workerId, setWokerId] = useState<number>(0);
+  const [idWorker, setIdWorker] = useState<number>(0);
   const [role, setRole] = useState<string>("");
 
   const [error, setError] = useState<Array<string>>([]);
@@ -20,46 +21,26 @@ const Register: React.FC = () => {
       email,
       password,
       passwordChecked,
-      workerId,
+      idWorker,
       role,
     };
 
     const register = async () => {
-
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(model)
-      };
-
-      const response = await fetch(`api/account/register`, requestOptions);
-
-      if (response.ok) 
-      {
-        const data = await response.json();
-        notification.success({
-          message: "Регистрация завершилась удачно",
-          placement: "topRight",
-          duration: 2,
-        });
-        if (data.error !== undefined) {
-          console.log(data.error);
-          setError(
-            ["Регистрация завершилась неудачно " + data.error]
-          );
-        } 
-        else 
-        {
-          setError([data.message]);
-        }
-      } 
-      else 
-      {
-        notification.error({
-          message: "Регистрация завершилась неудачно",
-          placement: "topRight",
-          duration: 2,
-        });
+      const response = await axios.post("api/account/register", model, {
+        withCredentials: true,
+      });
+  
+      notification.success({
+        message: "Регистрация завершилась удачно",
+        placement: "topRight",
+        duration: 2,
+      });
+  
+      if (response.data.error !== undefined) {
+        console.log(response.data.error);
+        setError(["Регистрация завершилась неудачно "].concat(response.data.error));
+      } else {
+        setError([response.data.message]);
       }
     };
     register();
@@ -113,8 +94,8 @@ const Register: React.FC = () => {
         >
           <Input
             name="workerId"
-            onChange={(e) => setWokerId(Number(e.target.value))}
-            value={workerId}
+            onChange={(e) => setIdWorker(Number(e.target.value))}
+            value={idWorker}
           />
         </Form.Item>
         <Form.Item

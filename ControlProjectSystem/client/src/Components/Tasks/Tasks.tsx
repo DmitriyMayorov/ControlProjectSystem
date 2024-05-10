@@ -4,8 +4,13 @@ import type { TableProps } from "antd";
 import TaskObj from "../Enitities/TaskObj";
 import { useLocation, useNavigate } from "react-router-dom";
 import TaskCreate from "./TaskCreate";
+import UserObj from "../Enitities/UserObj";
 
-const Task : React.FC = () => {
+interface TaskProps {
+    ChooseUser : UserObj | null;   
+}
+
+const Task : React.FC<TaskProps> = ({ChooseUser}) => {
 
     const [tasks, setTasks] = useState<Array<TaskObj>>([]);
     const [createModalIsShow, showCreateModel] = useState<boolean>(false);
@@ -91,7 +96,10 @@ const Task : React.FC = () => {
                 showCreateModel={showCreateModel}
             />
             <h3>{location.state.currentProject.name}</h3>
-            <Button onClick={(e) => showCreateModel(true)}>Добавить задание</Button>
+            <Button onClick={(e) => showCreateModel(true)}
+                disabled={ChooseUser?.roles === "Coder"}>
+                Добавить задание
+            </Button>
             <Table
                 key="TasksTable"
                 dataSource={tasks}

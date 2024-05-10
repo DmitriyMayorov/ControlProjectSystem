@@ -1,6 +1,7 @@
 ﻿using BusinesLogic.Service;
 using Interfaces.DTO;
 using Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,18 +22,21 @@ namespace ControlProjectSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Analyst, Coder, Tester")]
         public async Task<ActionResult<IEnumerable<MessageDTO>>> Get()
         {
             return await Task.Run(() => _messageService.GetMessages());
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Analyst, Coder, Tester")]
         public async Task<ActionResult<MessageDTO>> Get(int id)
         {
             return await Task.Run(() => _messageService.GetMessage(id));
         }
 
         [HttpPost]
+        [Authorize(Roles = "Analyst, Coder, Tester")]
         public async Task<ActionResult<MessageDTO>> Post(MessageDTO value)
         {
             if (!ModelState.IsValid)
@@ -43,6 +47,7 @@ namespace ControlProjectSystem.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Analyst, Coder, Tester")]
         public async Task<ActionResult<MessageDTO>> Put(int id, MessageDTO value)
         {
             await Task.Run(() => _messageService.UpdateMessage(value));
@@ -50,6 +55,7 @@ namespace ControlProjectSystem.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Analyst, Coder, Tester")]
         public async void Delete(int id)
         {
             await Task.Run(() => _messageService.DeleteMessage(id));

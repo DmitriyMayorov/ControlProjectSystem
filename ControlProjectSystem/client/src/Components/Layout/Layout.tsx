@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { NavLink, DropdownMenu, DropdownToggle, UncontrolledDropdown, DropdownItem } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -115,11 +115,11 @@ const Layout: React.FC<LayoutProps> = ({ ChooseUser }) => {
           mode="horizontal"
           style={{ minWidth: "1000px" }}
           items={
-            ChooseUser?.roles.includes("Analyst")
+            ChooseUser?.roles === "Analyst"
               ? AnalystRoles
-              : ChooseUser?.roles.includes("Coder")
+              : ChooseUser?.roles === "Coder"
               ? CoderRoles
-              : ChooseUser?.roles.includes("Tester")
+              : ChooseUser?.roles === "Tester"
               ? TesterRoles :
               defaultRolesGuests
           }/>

@@ -23,10 +23,9 @@ builder.Services.AddCors(options =>
 
     });
 });
+    //builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-//builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
-builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ControlProjectSystemContext>();
+    builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ControlProjectSystemContext>();
 
 builder.Services.AddTransient<IDbRepos, DbReposPgs>();
 builder.Services.AddTransient<IWorkerService, WorkerService>();
@@ -42,6 +41,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+
+//await IdentitySeed.CreateUserRoles(app.Services);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

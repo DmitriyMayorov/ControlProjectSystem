@@ -3,7 +3,6 @@ interface UserObj {
     email: string;
     workerId: number;
     roles: string;
-    isAuthenticated: boolean;
 }
   
 export default UserObj;

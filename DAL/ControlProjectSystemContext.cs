@@ -46,12 +46,12 @@ public partial class ControlProjectSystemContext : IdentityDbContext<User>
 
             entity.HasOne(d => d.IdtaskNavigation).WithMany(p => p.Messages)
                 .HasForeignKey(d => d.Idtask)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Task");
 
             entity.HasOne(d => d.IdworkerNavigation).WithMany(p => p.Messages)
                 .HasForeignKey(d => d.Idworker)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Worker");
         });
 
@@ -84,6 +84,7 @@ public partial class ControlProjectSystemContext : IdentityDbContext<User>
 
             entity.HasOne(d => d.IdprojectNavigation).WithMany(p => p.Tasks)
                 .HasForeignKey(d => d.Idproject)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Project");
 
             entity.HasOne(d => d.IdworkerAnalystNavigation).WithMany(p => p.TaskIdworkerAnalystNavigations)
@@ -116,12 +117,12 @@ public partial class ControlProjectSystemContext : IdentityDbContext<User>
 
             entity.HasOne(d => d.IdtaskNavigation).WithMany(p => p.Tracks)
                 .HasForeignKey(d => d.Idtask)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Task");
 
             entity.HasOne(d => d.IdworkerNavigation).WithMany(p => p.Tracks)
                 .HasForeignKey(d => d.Idworker)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Worker");
         });
 

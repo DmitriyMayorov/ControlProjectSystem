@@ -23,7 +23,7 @@ namespace Interfaces.DTO
         public string PasswordChecked { get; set; } = null!;
 
         [Range(0, int.MaxValue, ErrorMessage = "Пожалуйста введите корректный номер")]
-        public int IdWorker { get; set; }
+        public int idWorker { get; set; }
 
         [Required]
         public string Role { get; set; } = null!;

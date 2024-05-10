@@ -2,6 +2,7 @@
 using Interfaces.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace ControlProjectSystem.Controllers
@@ -19,18 +20,21 @@ namespace ControlProjectSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Analyst, Coder, Tester")]
         public async Task<ActionResult<IEnumerable<ProjectDTO>>> Get()
         {
             return await Task.Run(() => _projectService.GetProjects());
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Analyst, Coder, Tester")]
         public async Task<ActionResult<ProjectDTO>> Get(int id)
         {
             return await Task.Run(() => _projectService.GetProject(id));
         }
 
         [HttpPost]
+        [Authorize(Roles = "Analyst, Tester")]
         public async Task<ActionResult<ProjectDTO>> Post(ProjectDTO value)
         {
             if (!ModelState.IsValid)
@@ -41,6 +45,7 @@ namespace ControlProjectSystem.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Analyst, Tester")]
         public async Task<ActionResult<ProjectDTO>> Put(ProjectDTO value)
         {
             await Task.Run(() => _projectService.UpdateProject(value));
@@ -48,6 +53,7 @@ namespace ControlProjectSystem.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Analyst, Tester")]
         public async void Delete(int id)
         {
             await Task.Run(() => _projectService.DeleteProject(id));

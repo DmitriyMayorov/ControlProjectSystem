@@ -1,6 +1,7 @@
 ﻿using BusinesLogic.Service;
 using Interfaces.DTO;
 using Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,18 +21,21 @@ namespace ControlProjectSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Analyst, Coder, Tester")]
         public  async Task<ActionResult<IEnumerable<WorkerDTO>>> Get()
         {
             return await Task.Run(() =>  _workerService.GetWorkers());
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Analyst, Coder, Tester")]
         public async Task<ActionResult<WorkerDTO>> Get(int id)
         {
             return await Task.Run(() => _workerService.GetWorker(id));
         }
 
         [HttpPost]
+        [Authorize(Roles = "Analyst")]
         public async Task<ActionResult<WorkerDTO>> Post(WorkerDTO value)
         {
             if (!ModelState.IsValid)
@@ -42,6 +46,7 @@ namespace ControlProjectSystem.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Analyst")]
         public async Task<ActionResult<WorkerDTO>> Put(int id, WorkerDTO value)
         {
             await Task.Run(() => _workerService.UpdateWorker(value));
@@ -49,6 +54,7 @@ namespace ControlProjectSystem.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Analyst")]
         public async void Delete(int id)
         {
             await Task.Run(() => _workerService.DeleteWorker(id));

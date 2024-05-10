@@ -46,7 +46,7 @@ const WorkerCreate : React.FC<WorkerCreateProps> = ({
         }
     }, [editingWorker, form]);
 
-    const handleSubmit = (e: Event) => {
+    const handleSubmit = () => {
         const createWorker = async () => {
             const worker : WorkerObj = {
                 person,
@@ -83,6 +83,8 @@ const WorkerCreate : React.FC<WorkerCreateProps> = ({
                 passportSeries, 
                 position
             };
+
+            console.log(worker);
 
             const requestOptions = {
                 method: 'PUT',
@@ -124,7 +126,7 @@ const WorkerCreate : React.FC<WorkerCreateProps> = ({
                     form="workersForm"
                     type="primary"
                     htmlType="submit"
-                    onClick={() => showCreateModel(false)}>
+                    onClick={() => {handleSubmit(); showCreateModel(false)}}>
                     Save
                 </Button>,
                 <Button key="closeButton" onClick={() => showCreateModel(false)} danger>

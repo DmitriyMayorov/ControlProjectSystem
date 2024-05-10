@@ -2,7 +2,7 @@ interface RegisterObj {
     email: string;
     password: string;
     passwordChecked: string;
-    workerId: number;
+    idWorker: number;
     role: string;
   }
   

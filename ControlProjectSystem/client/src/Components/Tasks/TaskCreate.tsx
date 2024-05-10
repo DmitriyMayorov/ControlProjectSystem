@@ -130,7 +130,7 @@ const TaskCreate: React.FC<TaskCreateProps> = ({
                     form="taskForm"
                     type="primary"
                     htmlType="submit"
-                    onClick={() => showCreateModel(true)}>
+                    onClick={() => showCreateModel(false)}>
                     Save
                 </Button>,
                 <Button key="closeButton" onClick={() => showCreateModel(false)} danger>

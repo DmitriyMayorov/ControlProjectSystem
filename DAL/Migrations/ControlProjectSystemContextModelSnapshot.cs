@@ -473,12 +473,14 @@ namespace DataAccess.Migrations
                     b.HasOne("DomainModel.Task", "IdtaskNavigation")
                         .WithMany("Tracks")
                         .HasForeignKey("Idtask")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Task");
 
                     b.HasOne("DomainModel.Worker", "IdworkerNavigation")
                         .WithMany("Tracks")
                         .HasForeignKey("Idworker")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Worker");
 

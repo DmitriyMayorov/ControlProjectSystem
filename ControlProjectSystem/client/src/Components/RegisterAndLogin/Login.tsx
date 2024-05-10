@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import LoginObj from "../Enitities/LoginObj";
 import UserObj from "../Enitities/UserObj";
 import { notification } from "antd";
+import axios from "axios";
 
 interface LoginProps {
   setUser: (value: UserObj) => void;
@@ -26,35 +27,32 @@ const Login: React.FC<LoginProps> = ({ setUser }) => {
     };
 
     const login = async () => {
+      const response = await axios.post('api/account/login', model, {
+        withCredentials: true, 
+      })
 
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(model)
-      };
+      console.log(response);
 
-      const response = await fetch(`api/account/login`, requestOptions)
+      if (response.status === 200) {
+        setMessage(["Вход завершился удачно"]);
+        notification.success({
+          message: "Вход завершился удачно",
+          placement: "topRight",
+          duration: 2,
+        });
 
-        if (response.ok) {
-          const data = await response.json();
-          notification.success({
-            message: "Вход завершился удачно",
-            placement: "topRight",
-            duration: 2,
-          });
-
-          setUser(data.responseUser);
-          navigate("/");
-        } 
-        else
-        {
-          notification.error({
-            message: "Вход завершился неудачно",
-            placement: "topRight",
-            duration: 2,
-          });
-        }
+        setUser(response.data.responseUser);
+        navigate("/");
+      } else {
+        setMessage(["Вход завершился неудачно"]);
+        notification.error({
+          message: "Вход завершился неудачно",
+          placement: "topRight",
+          duration: 2,
+        });
+      }
     };
+
 
     login();
   };
@@ -62,13 +60,13 @@ const Login: React.FC<LoginProps> = ({ setUser }) => {
   return (
     <>
       <Form onFinish={handleSubmit}>
-        <br/>
+        <br />
         <Form.Item
           name="email"
           label="Email"
           hasFeedback
-          labelCol= { { span: 5 } }
-          wrapperCol= { {span: 13} }
+          labelCol={{ span: 5 }}
+          wrapperCol={{ span: 13 }}
           rules={[
             {
               required: true,
@@ -82,8 +80,8 @@ const Login: React.FC<LoginProps> = ({ setUser }) => {
           name="password"
           label="Пароль"
           hasFeedback
-          labelCol= { { span: 5 } }
-          wrapperCol= { {span: 13} }
+          labelCol={{ span: 5 }}
+          wrapperCol={{ span: 13 }}
           rules={[
             {
               required: true,
@@ -116,11 +114,11 @@ const Login: React.FC<LoginProps> = ({ setUser }) => {
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 16 }}>
           {message && message.map((value, key) => <p key={key}>{value}</p>)}
-          <br/>
+          <br />
           <Button htmlType="submit" type="primary">
             Вход
           </Button>
-          <br/>
+          <br />
           <Link to="/register">Страница регистрации</Link>
         </Form.Item>
       </Form>

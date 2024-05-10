@@ -11,6 +11,7 @@ import Layout from './Components/Layout/Layout';
 import { useEffect, useState } from 'react';
 import Register from './Components/RegisterAndLogin/Register';
 import TaskCurrent from './Components/Tasks/TaskCurrent';
+import axios from 'axios';
 
 interface ResponseModel {
   message: string;
@@ -23,23 +24,22 @@ function App() {
 
   useEffect(() => {
     const getUser = async () => {
-      const requestOptions = {
-        method: "GET",
-      };
-
-      return await fetch("api/account/isauthenticated", requestOptions)
-        .then((response) => {
-          return response.json();
+      try {
+        if (user !== null) {
+          console.log(user);
+          return;
+        }
+        const response = await axios.get("api/account/isauthenticated", {
+          withCredentials: true,
         })
-        .then(
-          (data: ResponseModel) => {
-            setUser(data.responseUser);
-          },
-          (error) => console.log(error)
-        );
+        console.log(response.data);
+        setUser(response.data);
+      } catch (error) {
+        console.log(error);
+      }
     };
     getUser();
-  }, []);
+  }, [user]);
 
   return (
     <BrowserRouter>
@@ -51,7 +51,7 @@ function App() {
           <Route path='/projects' element={<Project/>}/>
           <Route path='/workers' element={<Worker/>}/>
           <Route path='/projectsChoose' element={<ProjectChoose/>}/>
-          <Route path='/currentProject' element={<Task/>}/>
+          <Route path='/currentProject' element={<Task ChooseUser={user}/>}/>
           <Route path='/currentTask' element={<TaskCurrent/>}/>
         </Route>
       </Routes>

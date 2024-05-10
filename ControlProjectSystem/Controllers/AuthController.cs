@@ -48,7 +48,7 @@ namespace ControlProjectSystem.Controllers
             {
                 UserName = reg.Email,
                 Email = reg.Email,
-                idWorker = reg.IdWorker
+                idWorker = reg.idWorker
             };
 
             if (await roleManager.RoleExistsAsync(reg.Role))
@@ -141,12 +141,21 @@ namespace ControlProjectSystem.Controllers
         [Route("api/account/isauthenticated")]
         public async Task<IActionResult> IsAuthenticated()
         {
-            User usr = await GetCurrentUserAsync();
-            if (usr == null)
+            User responseUser = await GetCurrentUserAsync();
+            if (responseUser == null)
             {
                 return Unauthorized(new { message = "Вы Гость. Пожалуйста, выполните вход" });
             }
-            return Ok(new { message = "Сессия активна", userName = usr.UserName });
+            IList<string>? roles = await userManager.GetRolesAsync(responseUser);
+            string? userRole = roles.FirstOrDefault();
+            UserDTO mainuser = new UserDTO()
+            {
+                username = responseUser.UserName,
+                email = responseUser.Email,
+                workerId = responseUser.idWorker,
+                roles = userRole
+            };
+            return Ok(mainuser);
 
         }
     }

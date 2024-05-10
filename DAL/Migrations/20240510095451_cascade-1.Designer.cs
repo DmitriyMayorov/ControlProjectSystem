@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ControlProjectSystemContext))]
-    [Migration("20240508222925_resfreshMessage")]
-    partial class resfreshMessage
+    [Migration("20240510095451_cascade-1")]
+    partial class cascade1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -476,12 +476,14 @@ namespace DataAccess.Migrations
                     b.HasOne("DomainModel.Task", "IdtaskNavigation")
                         .WithMany("Tracks")
                         .HasForeignKey("Idtask")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Task");
 
                     b.HasOne("DomainModel.Worker", "IdworkerNavigation")
                         .WithMany("Tracks")
                         .HasForeignKey("Idworker")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Worker");
 

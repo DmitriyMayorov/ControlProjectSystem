@@ -11,10 +11,13 @@ import Track from "../Track/Track";
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const { TextArea } = Input;
-
+//Компонент выбранного задания по выбранному проекту
+//Компонент хранит в себе информацию по выбранному заданию, список сообщений по выбранному заданию, график, модальное окно для трекинга времени
 const TaskCurrent: React.FC = () => {
 
+  //Использования хука useLocation для получения значения, переданного через navigation state 
   const location = useLocation();
+  //переменные через useState, поля задания и вспомогательные флаги обновления для переотрисовки граифка 
   const [currentTask, setCurrentTask] = useState<TaskObj>();
   const [messages, setMessages] = useState<Array<MessageObj>>([]);
   const [workers, setWorkers] = useState<Array<WorkerObj>>([]);
@@ -30,14 +33,18 @@ const TaskCurrent: React.FC = () => {
   const [priority, setPriority] = useState<string>("");
   const [deadline, setDeadline] = useState<string>("");
   const [createModalIsShow, showCreateModel] = useState<boolean>(false)
+  //флаг переотрисовки. При обновлении данного значения вызывается хук у Plot
   const [refreshFlag, setRefreshFlag] = useState<boolean>(true);
   const [textMessage, setTextMessage] = useState<string>("");
+  //Получение сегодняшней даты без времени
   const dateMessage = new Date().toISOString().split("T")[0];
 
+  //Хук при обновлении состояния, исполняющих лиц. refresh - функцию отправления PUT запроса на выбранное задание
   useEffect(() => {
     refresh(currentTask?.id);
   }, [idWorkerCoder, idWorkerAnalyst, idWorkerMentor, idWorkerTester, state]);
 
+  //Хук useEffect для получения выбранного задания через хук useLocation
   useEffect(() => {
     console.log(location.state.currentTask.state);
     setCurrentTask(location.state.currentTask);
@@ -57,6 +64,7 @@ const TaskCurrent: React.FC = () => {
     getMessages();
   }, []);
 
+  //Функция для мониторинга изменения видимости модального окна. Если окно закрыто, то обновляем значение флага и переотрисовываем график
   const CreateModelIsShowFunction = (value: boolean) => {
     if (value) {
       showCreateModel(value);
@@ -67,6 +75,7 @@ const TaskCurrent: React.FC = () => {
     }
   }
 
+  //GET запрос на работников
   const getWorkers = async () => {
     const requestOptions: RequestInit = {
       method: 'GET'
@@ -83,6 +92,7 @@ const TaskCurrent: React.FC = () => {
       );
   };
 
+  //GET запрос на все сообщения с фильтрацией для выбранного задания
   const getMessages = async () => {
     const requestOptions: RequestInit = {
       method: 'GET'
@@ -101,6 +111,7 @@ const TaskCurrent: React.FC = () => {
       );
   }
 
+  //PUT запрос на изменение значений данных для выбранного задания
   const editCurrentTask = async (task: TaskObj | undefined) => {
     const requestOptions = {
       method: 'PUT',
@@ -121,6 +132,7 @@ const TaskCurrent: React.FC = () => {
       );
   }
 
+  //Общая функция для формирования из всех полей сущности выбранного задания на его редатирования в базе данных
   const refresh = async (id: number | undefined) => {
     const task: TaskObj = {
       id,
@@ -139,8 +151,10 @@ const TaskCurrent: React.FC = () => {
     editCurrentTask(task);
   }
 
+  //Добавление нового сообщения в список сообщений для видимости
   const addListMessage = async (message: MessageObj) => setMessages([...messages, message]);
 
+  //Отправление POST запроса на добавление нового сообщения с отправлением лица, отправляющим сообщение, исходя  именно из исполяющих лиц самого задания на данном этапе
   const addMessage = async () => {
 
     const idTask: number = Number(currentTask?.id);
@@ -294,6 +308,7 @@ const TaskCurrent: React.FC = () => {
             Сохранить описание
           </Button>
           <h3>Сообщения</h3>
+          {/* Скроллинг на списко сообщений и обработка необходимых параметров скроллинга - dataLength, hasMore, loader, next*/}
           <InfiniteScroll
             dataLength={messages.length}
             hasMore={messages.length < 1}

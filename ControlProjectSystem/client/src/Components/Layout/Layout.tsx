@@ -9,7 +9,7 @@ import "./Layout.css";
 import "bootstrap/dist/css/bootstrap.css";
 
 const { Header, Content, Footer } = LayoutAntd;
-
+//Ссылки, доступные по роли гостя
 const defaultRolesGuests = [
     {
       label: (
@@ -20,7 +20,7 @@ const defaultRolesGuests = [
       key: "1",
     },
 ];
-
+//Ссылки, доступные по роли аналитика
 const AnalystRoles = [
     {
         label: (
@@ -55,7 +55,7 @@ const AnalystRoles = [
         key: "4",
     },
 ];
-
+//Ссылки, доступные по роли программиста
 const CoderRoles = [
     {
         label: (
@@ -75,6 +75,7 @@ const CoderRoles = [
     },
 ];
 
+//Ссылки, доступные по роли тестировщика
 const TesterRoles = [
     {
         label: (
@@ -110,6 +111,7 @@ const Layout: React.FC<LayoutProps> = ({ ChooseUser }) => {
   return (
     <LayoutAntd className="informationAboutLogin">
       <Header style={{ display: "flex" }} >
+        {/*Верхняя навигационная панель и её item'ы, ссылки при разных ролях*/}
         <Menu
           theme="dark"
           mode="horizontal"
@@ -123,6 +125,7 @@ const Layout: React.FC<LayoutProps> = ({ ChooseUser }) => {
               ? TesterRoles :
               defaultRolesGuests
           }/>
+          {/*Выпадающий список с кнопками для перенаправления на старницы регистрации и авторизации*/ }
           <UncontrolledDropdown>
             <DropdownToggle caret color="dark" right style={{minWidth: "130px"}}>
               {ChooseUser ? ChooseUser.email : "Гость"}

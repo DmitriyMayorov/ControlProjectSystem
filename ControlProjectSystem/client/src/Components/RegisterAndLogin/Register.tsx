@@ -5,6 +5,10 @@ import RegisterObj from "../Enitities/RegisterObj";
 import { notification } from "antd";
 import axios from "axios";
 
+//Компонент регистрации, содержащий через useState поля интерфейса RegisterObj.ts
+//Содержится поле проверки пороля через useState
+//Отправляется POST запрос на api/account/register с сохранением куки через withCredentials: true
+//Производится выбор роли, id работника системы, email и пароль. Id работника в системе уже должен существовать
 const Register: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");

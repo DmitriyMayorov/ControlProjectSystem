@@ -11,6 +11,12 @@ interface LoginProps {
   setUser: (value: UserObj) => void;
 }
 
+//Компонент авторизации содержит в качестве переменных состояния useState поля авторизации сущности LoginObj(интерфейса)
+//сообщение - переменная, сожержащая информацию об успешном или неуспешном входе
+//Для авторизации отправляется POST запрос на сервер на api/account/login с передачей выбранных данных через axios, поскольку у данного инструмента
+//более устойчивая установка куки, в отличии от fetch.  withCredentials: true служит для установки куки
+//хук useNavigate служит для навигации
+//Пароль проходит валидацию, ходя здесь она не обязательная (обязательна для регистрации)
 const Login: React.FC<LoginProps> = ({ setUser }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");

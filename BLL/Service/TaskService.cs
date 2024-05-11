@@ -32,6 +32,7 @@ namespace BusinesLogic.Service
             return db.Tasks.GetList().Select(i => new TaskDTO(i)).Where(i => i.IDProject == projectID).ToList();
         }
 
+        //Функция получения заданий по выбранному проекту и статусу. Функция использовалось для версии проекта на WPF
         public List<TaskDTO> GetTaskByStatusTaskFromCurrentProject(ProjectDTO project, string status)
         {
             if (status == "Analyst")
@@ -93,7 +94,7 @@ namespace BusinesLogic.Service
             db.Tasks.Delete(id);
             SaveChanges();
         }
-
+        //Функция переключения состояния задания на стадию разработки.Функция использовалось для версии проекта на WPF
         public bool ToInProgress(TaskDTO task)
         {
             DomainModel.Task? taskCurrent = db.Tasks.GetItem(task.Id);
@@ -103,7 +104,7 @@ namespace BusinesLogic.Service
             SaveChanges();
             return true;
         }
-
+        //Функция переключения состояния задания на стадию ревью.Функция использовалось для версии проекта на WPF
         public bool ToReview(TaskDTO task)
         {
             DomainModel.Task? taskCurrent = db.Tasks.GetItem(task.Id);
@@ -113,7 +114,7 @@ namespace BusinesLogic.Service
             SaveChanges();
             return true;
         }
-
+        //Функция переключения состояния задания на стадию проверки на реальном сервере.Функция использовалось для версии проекта на WPF
         public bool ToStage(TaskDTO task)
         {
             DomainModel.Task? taskCurrent = db.Tasks.GetItem(task.Id);
@@ -123,7 +124,7 @@ namespace BusinesLogic.Service
             SaveChanges();
             return true;
         }
-
+        //Функция переключения состояния задания на стадию тестирования.Функция использовалось для версии проекта на WPF
         public bool ToTest(TaskDTO task)
         {
             DomainModel.Task? taskCurrent = db.Tasks.GetItem(task.Id);
@@ -133,7 +134,7 @@ namespace BusinesLogic.Service
             SaveChanges();
             return true;
         }
-
+        //Функция переключения состояния задания на стадию готовности.Функция использовалось для версии проекта на WPF
         public bool ToReady(TaskDTO task)
         {
             DomainModel.Task? taskCurrent = db.Tasks.GetItem(task.Id);

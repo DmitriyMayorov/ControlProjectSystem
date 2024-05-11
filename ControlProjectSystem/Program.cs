@@ -25,8 +25,8 @@ builder.Services.AddCors(options =>
 });
     //builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-    builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ControlProjectSystemContext>();
-
+builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ControlProjectSystemContext>();
+//Регистрация зависимостей
 builder.Services.AddTransient<IDbRepos, DbReposPgs>();
 builder.Services.AddTransient<IWorkerService, WorkerService>();
 builder.Services.AddTransient<IProjectService, ProjectService>();
@@ -46,6 +46,7 @@ var app = builder.Build();
 //await IdentitySeed.CreateUserRoles(app.Services);
 
 // Configure the HTTP request pipeline.
+//Использование Swagger 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -60,7 +61,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+//Использование Cors для работы с клиентской частью
 app.UseCors();
 
 app.Run();

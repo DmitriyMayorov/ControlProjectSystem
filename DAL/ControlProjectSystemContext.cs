@@ -89,18 +89,22 @@ public partial class ControlProjectSystemContext : IdentityDbContext<User>
 
             entity.HasOne(d => d.IdworkerAnalystNavigation).WithMany(p => p.TaskIdworkerAnalystNavigations)
                 .HasForeignKey(d => d.IdworkerAnalyst)
+                .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_WAnalyst");
 
             entity.HasOne(d => d.IdworkerCoderNavigation).WithMany(p => p.TaskIdworkerCoderNavigations)
                 .HasForeignKey(d => d.IdworkerCoder)
+                .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_WCoder");
 
             entity.HasOne(d => d.IdworkerMentorNavigation).WithMany(p => p.TaskIdworkerMentorNavigations)
                 .HasForeignKey(d => d.IdworkerMentor)
+                .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_WMentor");
 
             entity.HasOne(d => d.IdworkerTesterNavigation).WithMany(p => p.TaskIdworkerTesterNavigations)
                 .HasForeignKey(d => d.IdworkerTester)
+                .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_WTester");
         });
 

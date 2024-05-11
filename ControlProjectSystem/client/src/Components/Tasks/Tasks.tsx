@@ -9,7 +9,10 @@ import UserObj from "../Enitities/UserObj";
 interface TaskProps {
     ChooseUser : UserObj | null;   
 }
-
+//Компонент для отображения таблицы заданий для выбранного проекта. Хранится список  заданий для выбранного проекта и модальное окно их добавления
+//через useLocation и state получаем выбранный проект. 
+//Хук useNavigation перенаправляет на страницу уже выбранного задания
+//Отправляется GET запрос на все задания с их фильтрацией. Удаление задания производится по средствам отправления DELETE запроса и фильтрации в таблице
 const Task : React.FC<TaskProps> = ({ChooseUser}) => {
 
     const [tasks, setTasks] = useState<Array<TaskObj>>([]);

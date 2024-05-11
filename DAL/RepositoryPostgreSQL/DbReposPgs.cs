@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.RepositoryPostgreSQL
 {
+    //Реализация паттерна репозиторий и его контекста для работы не с контектстом БД, а для работы с прослойкой между базой и бизнес логикой
     public class DbReposPgs : IDbRepos
     {
         private ControlProjectSystemContext db;

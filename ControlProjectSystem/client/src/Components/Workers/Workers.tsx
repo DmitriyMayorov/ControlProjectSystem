@@ -4,6 +4,12 @@ import { Button, Table } from "antd";
 import type { TableProps } from "antd";
 import WorkerCreate from "./WorkersCreate";
 
+//Компонент, хранящий таблицу работников системы
+//Содержит модальное окно добавления новых проектов WorkerCreate
+//workers - массив работиков, получаемых через useEffect и GET запрос. Запрос отправляется при изменении значения переменной createModalIsShow
+//Видимость модального окна зависит от значения createModalIsShow
+//Колонки таблицы описаны в переменной columns. Вместе с колонками данных в таблице находятся кнопки удаления и изменения
+//Для удаления отправляется DELETE запрос на сервер с id выбранного проекта. Удаление производится каскадно
 const Worker : React.FC = () => {
 
     const [workers, setWorkers] = useState<Array<WorkerObj>>([]);

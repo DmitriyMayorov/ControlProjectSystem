@@ -17,7 +17,8 @@ interface ResponseModel {
   message: string;
   responseUser: UserObj;
 }
-
+//Отправление get запроса на api/account/isauthenticated для получения авторизированного пользователя и его роли.
+//useEffect выполняется при изменении значения переменной user. GET запрос выполняется, если user = null
 function App() {
 
   const [user, setUser] = useState<UserObj | null>(null);
@@ -41,6 +42,7 @@ function App() {
     getUser();
   }, [user]);
 
+  //Маршрутизация проекта 
   return (
     <BrowserRouter>
       <Routes>

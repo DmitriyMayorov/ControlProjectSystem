@@ -12,6 +12,9 @@ interface DataItem {
   countH: number;
 }
 
+//Компонент отображения графика. переменная data содержит информацию о подписях осей X и Y. Выводится всегда пять столбцов по количеству стадий задания
+//Прозводится фильтрация по выбранной стадии и суммирование затреканных часов и запись суммы в data. И так для каждой стадии задания
+//Полученные значения формируют data в config, который и отправляется для компонента AntDesign Column 
 const DemoColumn: React.FC<DemoColumnProps> = ({idtask, refreshFlag}) => {
 
   const [tracks, setTracks] = useState<Array<TrackObj>>([]);

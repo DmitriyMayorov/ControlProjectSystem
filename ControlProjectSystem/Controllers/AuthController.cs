@@ -53,7 +53,9 @@ namespace ControlProjectSystem.Controllers
 
             if (await roleManager.RoleExistsAsync(reg.Role))
             {
+                //Добавление нового пользователя
                 var result = await userManager.CreateAsync(user, reg.Password);
+                //Если успешно, тот добавление куки и роли к пользователю
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, reg.Role);
@@ -64,10 +66,12 @@ namespace ControlProjectSystem.Controllers
                 {
                     foreach (var error in result.Errors)
                     {
+                        //Получение ошибок
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
                     var errorMsg = new
                     {
+                        //Создание сообщения об ошибки 
                         message = "Пользователь не добавлен",
                         error = ModelState.Values.SelectMany(e => e.Errors.Select(er => er.ErrorMessage))
                     };
@@ -85,6 +89,7 @@ namespace ControlProjectSystem.Controllers
         [Route("api/account/login")]
         public async Task<IActionResult> Login(LoginDTO login)
         {
+            //Невалидность
             if (!ModelState.IsValid ||
                 userManager == null ||
                 signInManager == null)
@@ -97,11 +102,13 @@ namespace ControlProjectSystem.Controllers
                 return Created("", errorMsg);
             }
 
+            //Проверка авторизации
             var result = await signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, false);
             if (result.Succeeded)
             {
                 User? user = await userManager.GetUserAsync(HttpContext.User);
                 IEnumerable<string> roles = await userManager.GetRolesAsync(user);
+                //Созание DTO на пользователя для передачи авторизованного пользователя на клиентскую часть
                 UserDTO responseUser = new UserDTO()
                 {
                     username = user.UserName,
@@ -133,6 +140,7 @@ namespace ControlProjectSystem.Controllers
                 return Unauthorized(new { message = "Сначала выполните вход" });
             }
 
+            //Удаление куки и выход из авторизованного пользователя
             await signInManager.SignOutAsync();
             return Ok(new { message = "Выполнен выход", userName = usr.UserName });
         }
@@ -142,12 +150,15 @@ namespace ControlProjectSystem.Controllers
         public async Task<IActionResult> IsAuthenticated()
         {
             User responseUser = await GetCurrentUserAsync();
+            //Получение пользователя и общая проверка на авторизацию
             if (responseUser == null)
             {
                 return Unauthorized(new { message = "Вы Гость. Пожалуйста, выполните вход" });
             }
+            //Получение роли
             IList<string>? roles = await userManager.GetRolesAsync(responseUser);
             string? userRole = roles.FirstOrDefault();
+            //Отправление DTO пользователя с полученной для него ролью
             UserDTO mainuser = new UserDTO()
             {
                 username = responseUser.UserName,

@@ -4,6 +4,10 @@ import { Table } from "antd";
 import type { TableProps } from "antd";
 import { useNavigate } from "react-router-dom";
 
+//Компонент выбора необходимого проекта. соддержит переменную состояние, храняющее все проекты
+//Название колонок и данные по колонкам описаны в columns. 
+//Отпарляется GET запрос в хуке useEffect, который вызывается при отображении компонента
+//При нажатии на строку таблицы, вызывается функция onRowClick, перенаправляющая по url /currentProject с передачей через state выбранного проекта
 const ProjectChoose: React.FC = () => {
 
     const [projects, setProjects] = useState<Array<ProjectObj>>([]);

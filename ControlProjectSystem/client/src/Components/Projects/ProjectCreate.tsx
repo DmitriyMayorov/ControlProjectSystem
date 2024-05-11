@@ -10,6 +10,13 @@ interface ProjectCreateProps {
     showCreateModel: (value: boolean) => void;
 }
 
+//Компонент модального окна создания и редактирования элементов - проектов
+//в editingProject передаётся объект для редактирования. Если его нет, то форма работает на создание нового проекта
+//Если форма выбрана для редактирования, то загружаем данные в форму - form.setFieldsValue
+//Отправляем POST запрос, если создание проекта, и PUT, если редактирование
+//Форма - модальное окно с footer'ом, содеражщим кнопки сохранения и закрытия. При нажатии кнопки сохранить, элементы форму собираются в
+//переменную project и отправляется запросом на сервер
+//Обновление/Добавление переменной в таблице проектов проивзодится за счёт функций updateProject и addProject, получаемых из стороннего компонента (реализуемых там)
 const ProjectCreate: React.FC<ProjectCreateProps> = ({
     editingProject,
     addProject,
@@ -40,7 +47,7 @@ const ProjectCreate: React.FC<ProjectCreateProps> = ({
         };
     }, [editingProject, form]);
 
-    const handleSubmit = (e: Event) => {
+    const handleSubmit = () => {
         const createProject = async () => {
             const project: ProjectObj = {
                 name,
@@ -114,7 +121,7 @@ const ProjectCreate: React.FC<ProjectCreateProps> = ({
                     form="projectForm"
                     type="primary"
                     htmlType="submit"
-                    onClick={() => showCreateModel(false)}>
+                    onClick={() => {showCreateModel(false);}}>
                     Save
                 </Button>,
                 <Button key="closeButton" onClick={() => showCreateModel(false)} danger>

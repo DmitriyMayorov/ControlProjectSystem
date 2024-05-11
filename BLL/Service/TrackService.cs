@@ -75,11 +75,13 @@ namespace BusinesLogic.Service
             SaveChanges();
         }
 
+        //Функция получения суммы затреканому времени по выбранному заданию и выбранному этапу разработки задания. Использовалась для проекта WPF
         public int GetSumHours(int idTask, string status)
         {
             return db.Tracks.GetList().Where(i => i.Idtask == idTask && i.StatusTask == status).Sum(i => i.CountHours);
         }
 
+        //Функция проверки возможности создания заданий в системе. Функция использовалась для версии проекта на WPF
         public bool isShouldCreateTask(TrackDTO track, string status)
         {
             if (status == "Coder" && track.StatusTask != "InProgress" && track.StatusTask != "Stage" && track.StatusTask != "Review")

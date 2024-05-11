@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Input, Modal, Button, Form, } from "antd";
+import { Input, Modal, Button, Form, Select } from "antd";
 import WorkerObj from "../Enitities/WorkerObj";
 
 interface WorkerCreateProps {
     editingWorker: WorkerObj | undefined;
     addWorker: (worker: WorkerObj) => void;
-    updateWorker: (worker : WorkerObj) => void;
+    updateWorker: (worker: WorkerObj) => void;
     createModalIsShow: boolean;
     showCreateModel: (value: boolean) => void;
 }
 
-const WorkerCreate : React.FC<WorkerCreateProps> = ({
+const WorkerCreate: React.FC<WorkerCreateProps> = ({
     editingWorker,
     addWorker,
     updateWorker,
-    createModalIsShow, 
+    createModalIsShow,
     showCreateModel
 }) => {
     const [form] = Form.useForm();
@@ -25,8 +25,7 @@ const WorkerCreate : React.FC<WorkerCreateProps> = ({
     const [isEdit, setIsEdit] = useState<boolean>(false);
 
     useEffect(() => {
-        if (editingWorker !== undefined)
-        {
+        if (editingWorker !== undefined) {
             form.setFieldsValue({
                 person: editingWorker.person,
                 passportNum: editingWorker.passportNum,
@@ -48,10 +47,10 @@ const WorkerCreate : React.FC<WorkerCreateProps> = ({
 
     const handleSubmit = () => {
         const createWorker = async () => {
-            const worker : WorkerObj = {
+            const worker: WorkerObj = {
                 person,
-                passportNum, 
-                passportSeries, 
+                passportNum,
+                passportSeries,
                 position
             }
 
@@ -71,16 +70,16 @@ const WorkerCreate : React.FC<WorkerCreateProps> = ({
                         form.resetFields();
                     }
                 },
-                (error) => console.log(error)
+                    (error) => console.log(error)
                 );
         };
 
-        const editWorker = async (id : number | undefined) => {
+        const editWorker = async (id: number | undefined) => {
             const worker: WorkerObj = {
                 id,
                 person,
-                passportNum, 
-                passportSeries, 
+                passportNum,
+                passportSeries,
                 position
             };
 
@@ -126,7 +125,7 @@ const WorkerCreate : React.FC<WorkerCreateProps> = ({
                     form="workersForm"
                     type="primary"
                     htmlType="submit"
-                    onClick={() => {handleSubmit(); showCreateModel(false)}}>
+                    onClick={() => { handleSubmit(); showCreateModel(false) }}>
                     Save
                 </Button>,
                 <Button key="closeButton" onClick={() => showCreateModel(false)} danger>
@@ -183,16 +182,18 @@ const WorkerCreate : React.FC<WorkerCreateProps> = ({
                     {
                         required: true,
                         type: "string",
-                        message: "Введите должность"
+                        message: "Выберите должность"
                     }
-                ]}>
-                    <Input
-                        key="Position"
-                        type="string"
-                        name="Position"
-                        placeholder="Введите должность"
-                        value={position}
-                        onChange={(e) => setPosition(e.target.value)} />
+                ]}
+                >
+                    <Select
+                        onChange={(e) => setPosition(e)}
+                        options={[
+                            { value: "Analyst", label: "Аналитик" },
+                            { value: "Coder", label: "Программист" },
+                            { value: "Tester", label: "Тестировщик" }
+                        ]}
+                    />
                 </Form.Item>
             </Form>
         </Modal>

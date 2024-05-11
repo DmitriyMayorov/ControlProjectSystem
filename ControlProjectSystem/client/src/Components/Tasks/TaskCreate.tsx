@@ -9,7 +9,12 @@ interface TaskCreateProps {
     createModalIsShow: boolean;
     showCreateModel: (value: boolean) => void;
 }
-
+//Компонент модального окна для добавления нового задания
+//Форма заполняется работниками проектов, отфильтрованными в соответствии с их ролями
+//Также форма заполняется списком самих проектов. Работники и проекты получаются через хук useEffect через GET запрос
+//При обработке сохранения/добавления нового проекта, форма очищается и добавлется новое задание через POSt запрос на  api/Tasks
+//все поля через useState хранят информацию о полях TaskObj и  списки проектов и работников. Не меняется исходное состояние заданий
+//Любое задание находится на стадии аналитики по умолчанию
 const TaskCreate: React.FC<TaskCreateProps> = ({
     addTask,
     createModalIsShow,
@@ -80,7 +85,7 @@ const TaskCreate: React.FC<TaskCreateProps> = ({
         }
     }, [createModalIsShow, form]);
 
-    const handleSubmit = (e: Event) => {
+    const handleSubmit = () => {
         const createTasks = async () => {
             const task: TaskObj = {
                 name,
@@ -110,8 +115,8 @@ const TaskCreate: React.FC<TaskCreateProps> = ({
                     (data) => {
                         console.log(data)
                         if (response.ok) {
-                            addTask(data);
                             form.resetFields();
+                            addTask(data);
                         }
                     },
                     (error) => console.log(error)
@@ -123,14 +128,14 @@ const TaskCreate: React.FC<TaskCreateProps> = ({
     return (
         <Modal open={createModalIsShow}
             title="Форма задания"
-            onCancel={() => showCreateModel(false)}
+            onCancel={() => {showCreateModel(false)}}
             footer={[
                 <Button
                     key="submitButton"
                     form="taskForm"
                     type="primary"
                     htmlType="submit"
-                    onClick={() => showCreateModel(false)}>
+                    onClick={() => {handleSubmit(); showCreateModel(false);}}>
                     Save
                 </Button>,
                 <Button key="closeButton" onClick={() => showCreateModel(false)} danger>
